@@ -31,7 +31,8 @@ class ShipmentViewModel : ViewModel() {
                     "Maxi de Glew",
                     "220294020",
                     Address("Aranguren 242, Glew", "", "Casa blanca")
-                )
+                ),
+                "DELIVERED"
             ),
             Shipment(
                 arrayListOf(
@@ -42,7 +43,8 @@ class ShipmentViewModel : ViewModel() {
                     "Tarry Pollo",
                     "220294020",
                     Address("Nuestras Malvinas 277, Glew", "", "Casa blanca")
-                )
+                ),
+                "CREATED"
             ),
             Shipment(
                 arrayListOf(
@@ -53,7 +55,8 @@ class ShipmentViewModel : ViewModel() {
                     "Juanito",
                     "+5492216057065",
                     Address("Calle 10 1077, Glew", "", "depto 4D")
-                )
+                ),
+                "CREATED"
             )
         )
     }

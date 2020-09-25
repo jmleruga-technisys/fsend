@@ -8,5 +8,7 @@ data class Shipment (
     @SerializedName("products")
     var products : ArrayList<Product>,
     @SerializedName("clientInfo")
-    var clientInfo: ClientInfo
+    var clientInfo: ClientInfo,
+    @SerializedName("state")
+    var state: String
 )

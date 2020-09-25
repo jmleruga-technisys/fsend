@@ -36,15 +36,29 @@ class ShipmentListFragment : Fragment() {
 
         if(viewModel.shipments != null && viewModel.shipments!!.isNotEmpty()){
             shipmentsGroup.visibility = View.VISIBLE
+            shipmentsIndicatorsGroup.visibility = View.VISIBLE
             noShipmentGroup.visibility = View.GONE
+            checkSentShipments()
             shipmentRecyclerView.adapter = ShipmentsAdapter(viewModel.shipments!!, context) { selected ->
                 selectedShipment = selected
                 //Voy al detalle findNavController().navigate(R.id.action)
             }
         }else{
             noShipmentGroup.visibility = View.VISIBLE
+            shipmentsIndicatorsGroup.visibility = View.GONE
             shipmentsGroup.visibility = View.GONE
         }
+    }
+
+    fun checkSentShipments(){
+        var counter = 0
+        viewModel.shipments?.let {
+            it.forEach { shipment ->
+                if(shipment.state == "DELIVERED")
+                    counter++
+            }
+        }
+        sentShipments.text = context?.getString(R.string.sent_shipments, counter, viewModel.shipments!!.size)
     }
 
 }
