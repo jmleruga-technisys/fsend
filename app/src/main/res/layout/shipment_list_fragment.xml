@@ -24,7 +24,7 @@
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="H,3:1"
             android:layout_marginTop="16dp"
-            android:background="@drawable/Logo"
+            android:background="@drawable/logo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -62,12 +62,48 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/noShipmentImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:src="@drawable/no_shipments"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"/>
+
+    <TextView
+        android:id="@+id/noShipmentText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_shipment_text"
+        android:textSize="@dimen/text_size_medium_small"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/noShipmentImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/shipmentRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/noShipmentGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="noShipmentImage, noShipmentText"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/shipmentsGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="shipmentRecyclerView"/>
 
 
 

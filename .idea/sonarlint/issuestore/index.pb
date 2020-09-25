@@ -15,8 +15,6 @@ h
 8app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml,6/e/6ec7d34b130497a10dc92abcde9b313d370a89df
 S
 #app/src/main/res/values/strings.xml,d/2/d2281fbb3027de2722081a53408dd77628bf080e
-R
-"app/src/main/res/values/styles.xml,f/7/f79cc2688e29fcbc286fda14ae07b27c9e83690f
 P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 >

@@ -4,4 +4,5 @@
     <string name="address_item">Dirección</string>
     <string name="address_subtitle">Piso 1, Depto 2</string>
     <string name="button_select_shipment">Estoy en camino</string>
+    <string name="no_shipment_text">No hay envíos para entregar</string>
 </resources>
