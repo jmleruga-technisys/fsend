@@ -6,9 +6,9 @@
     app:startDestination="sh"
     tools:ignore="UnusedNavigation">
     <fragment
-        android:id="@+id/qrCameraFragment"
+        android:id="@+id/shipmentListFragment"
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentListFragment"
-        android:label="qr_camera_fragment"
+        android:label="shipment_list_fragment"
         tools:layout="@layout/shipment_list_fragment" >
 
     </fragment>

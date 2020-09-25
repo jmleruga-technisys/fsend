@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Margins -->
+    <dimen name="margin_small">16dp</dimen>
+    <dimen name="margin_medium">32dp</dimen>
+    <dimen name="margin_medium_big">36dp</dimen>
+
+    <!-- Buttons -->
+    <dimen name="custom_button_height">48dp</dimen>
+    <dimen name="custom_button_width">296dp</dimen>
+    <dimen name="photo_button_height">32dp</dimen>
+    <dimen name="photo_button_width">32dp</dimen>
+    <dimen name="photo_button_icon_height">24dp</dimen>
+    <dimen name="photo_button_icon_width">24dp</dimen>
+    <dimen name="translation_shadow_button">18dp</dimen>
+    <dimen name="translation_shadow_disabled_button">0dp</dimen>
+
+    <!--Material spinner-->
+    <dimen name="label_text_size">12sp</dimen>
+    <dimen name="underline_top_spacing">8dp</dimen>
+    <dimen name="underline_bottom_spacing">4dp</dimen>
+    <dimen name="error_label_spacing">12dp</dimen>
+    <dimen name="floating_label_top_spacing">4dp</dimen>
+    <dimen name="floating_label_bottom_spacing">8dp</dimen>
+    <dimen name="floating_label_inside_spacing">12dp</dimen>
+    <dimen name="right_left_spinner_padding">8dp</dimen>
+    <dimen name="min_content_height">20dp</dimen>
+
+    <!-- Custom CheckBox -->
+    <dimen name="custom_textbox_text_info_selectable">10dp</dimen>
+
+    <!-- Font Sizes -->
+    <dimen name="text_size_xxxl">48sp</dimen>
+    <dimen name="text_size_xxl">40sp</dimen>
+    <dimen name="text_size_xl">32sp</dimen>
+    <dimen name="text_size_l">24sp</dimen>
+    <dimen name="text_size_m">20sp</dimen>
+    <dimen name="text_size_s">16sp</dimen>
+    <dimen name="text_size_xs">14sp</dimen>
+    <dimen name="text_size_xxs">12sp</dimen>
+
+    <dimen name="text_size_small">@dimen/text_size_xxs</dimen>
+    <dimen name="text_size_small_big">@dimen/text_size_xs</dimen>
+    <dimen name="text_size_medium_small">@dimen/text_size_s</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_medium_big">@dimen/text_size_m</dimen>
+    <dimen name="text_size_medium_biggest">@dimen/text_size_l</dimen>
+    <dimen name="text_size_big">@dimen/text_size_xxxl</dimen>
+</resources>

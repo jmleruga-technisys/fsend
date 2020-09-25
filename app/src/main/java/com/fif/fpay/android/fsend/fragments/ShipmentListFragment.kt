@@ -6,18 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.navGraphViewModels
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 
 class ShipmentListFragment : Fragment() {
+    private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
     companion object {
         fun newInstance() =
             ShipmentListFragment()
     }
-
-    private lateinit var viewModel: ShipmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +27,8 @@ class ShipmentListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ShipmentViewModel::class.java)
-        // TODO: Use the ViewModel
+
+
     }
 
 }
