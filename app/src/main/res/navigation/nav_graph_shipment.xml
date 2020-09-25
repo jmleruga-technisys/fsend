@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph_shipment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_shipment"
+    app:startDestination="sh"
+    tools:ignore="UnusedNavigation">
+    <fragment
+        android:id="@+id/qrCameraFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.ShipmentListFragment"
+        android:label="qr_camera_fragment"
+        tools:layout="@layout/shipment_list_fragment" >
 
+    </fragment>
 </navigation>

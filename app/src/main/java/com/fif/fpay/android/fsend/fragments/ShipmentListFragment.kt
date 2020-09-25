@@ -1,4 +1,4 @@
-package com.fif.fpay.android.fsend
+package com.fif.fpay.android.fsend.fragments
 
 
 import android.os.Bundle
@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.fif.fpay.android.fsend.R
+import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 
 class ShipmentListFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ShipmentListFragment()
+        fun newInstance() =
+            ShipmentListFragment()
     }
 
     private lateinit var viewModel: ShipmentViewModel

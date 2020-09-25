@@ -3,6 +3,7 @@ package com.fif.fpay.android.fsend
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
+import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 
 class MainActivity : AppCompatActivity() {
     private val navController by lazy { findNavController(R.id.nav_graph_shipment) } //1

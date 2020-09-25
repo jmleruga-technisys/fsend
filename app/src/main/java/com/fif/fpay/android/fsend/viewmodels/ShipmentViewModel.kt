@@ -1,4 +1,4 @@
-package com.fif.fpay.android.fsend
+package com.fif.fpay.android.fsend.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
