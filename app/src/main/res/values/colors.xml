@@ -30,4 +30,5 @@
     <color name="logo_main_dark_grey">#55585a</color>
     <color name="logo_main_light_blue">#0072ce</color>
     <color name="logo_main_blue">#003594</color>
+    <color name="sap_green">#47a01a</color>
 </resources>
