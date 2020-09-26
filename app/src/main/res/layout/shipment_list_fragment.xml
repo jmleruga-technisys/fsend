@@ -57,6 +57,7 @@
             android:textColor="@color/extra_white"
             android:textStyle="bold"
             android:textSize="16sp"
+            android:fontFamily="@font/roboto"
             android:clickable="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

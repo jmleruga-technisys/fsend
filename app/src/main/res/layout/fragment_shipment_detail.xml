@@ -98,6 +98,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:text="Entregar"
+            android:fontFamily="@font/roboto"
             app:layout_constraintBottom_toTopOf="@+id/textViweNotShip"
             app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
             app:layout_constraintStart_toStartOf="parent" />
@@ -111,6 +112,7 @@
             android:text="No pude entregar"
             android:textColor="@color/color_main_red"
             android:textSize="20dp"
+            android:fontFamily="@font/roboto"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <!--        <EditText-->
@@ -154,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_arrow_back_withe"
+                android:background="@drawable/ic_chevron_arrow_back"
                 tools:ignore="UselessParent" />
 
         </FrameLayout>

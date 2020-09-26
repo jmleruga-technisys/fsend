@@ -24,6 +24,7 @@
         android:gravity="start"
         android:textColor="@color/gray100"
         android:textSize="14sp"
+        android:fontFamily="@font/roboto"
         app:layout_constraintLeft_toRightOf="@+id/error_icon"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
