@@ -15,6 +15,7 @@ import com.fif.fpay.android.fsend.data.DirectionResponses
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
@@ -78,6 +79,19 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         map = googleMap!!
         map.setOnMarkerClickListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
+
+
+            map.setOnMyLocationChangeListener { arg0 ->
+                map.addMarker(
+                    MarkerOptions().position(
+                        LatLng(
+                            arg0.latitude,
+                            arg0.longitude
+                        )
+                    ).title("It's Me!")
+                )
+            }
+
 
         initDirection = "Nuestras Malvinas 277,Glew"
         goToDirection = "Aranguren 242,Glew"
@@ -247,6 +261,8 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
 
     }
+
+
 
 
 }

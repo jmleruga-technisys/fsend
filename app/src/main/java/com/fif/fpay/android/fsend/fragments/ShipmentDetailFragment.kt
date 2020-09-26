@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 import kotlinx.android.synthetic.main.fragment_shipment_detail.*
+import kotlinx.android.synthetic.main.shipment_qr_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +40,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ShipmentDetailFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ShipmentDetailFragment : Fragment(), OnMapReadyCallback {
+class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var myPosition: LatLng
@@ -64,6 +65,13 @@ class ShipmentDetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        setToolbar(shipmentDetailToolbar)
+        shipmentDetailToolbar?.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
+
         myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
