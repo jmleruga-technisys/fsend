@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.adapter.ShipmentsAdapter
 import com.fif.fpay.android.fsend.data.Shipment
@@ -33,7 +34,7 @@ class ShipmentListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
         if(viewModel.shipments != null && viewModel.shipments!!.isNotEmpty()){
             shipmentsGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.VISIBLE
