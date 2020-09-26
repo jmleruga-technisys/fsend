@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ShipmentListFragment"
-    android:backgroundTint="@color/transparent">
+    tools:context=".fragments.ShipmentListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/headerLayout"
@@ -30,9 +29,11 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/shipmentIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
             android:layout_marginTop="22dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:alpha="0.7"
             android:background="@color/transparent"
             android:visibility="visible"
@@ -41,15 +42,17 @@
             app:layout_constraintTop_toBottomOf="@id/logo"
             app:tabBackground="@drawable/tab_pager_selector"
             app:tabIndicatorHeight="0dp"
-            app:tabMinWidth="16dp"
-            app:tabPaddingEnd="8dp"
-            app:tabPaddingStart="8dp" />
+            app:tabMode="fixed"
+            app:tabMinWidth="32dp"
+            app:tabPaddingEnd="16dp"
+            app:tabPaddingStart="16dp" />
 
         <TextView
             android:id="@+id/sentShipments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sent_shipments"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:textColor="@color/extra_white"
             android:textStyle="bold"
