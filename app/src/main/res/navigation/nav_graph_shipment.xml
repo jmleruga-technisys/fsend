@@ -29,7 +29,14 @@
         android:id="@+id/shipmentQrFragment"
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentQrFragment"
         android:label="shipment_qr_fragment"
-        tools:layout="@layout/shipment_qr_fragment" />
+        tools:layout="@layout/shipment_qr_fragment" >
+        <action
+            android:id="@+id/action_shipmentQrFragment_to_shipmentSuccesFragment"
+            app:destination="@id/shipmentSuccesFragment" />
+        <action
+            android:id="@+id/action_shipmentQrFragment_to_shipmentErrorFragment"
+            app:destination="@id/shipmentErrorFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.fif.fpay.android.fsend.MapFragment"
@@ -40,6 +47,20 @@
         android:name="com.fif.fpay.android.fsend.ConfigurationsFragment"
         android:label="fragment_configurations"
         tools:layout="@layout/fragment_configurations" />
+    <fragment
+        android:id="@+id/shipmentSuccesFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.ShipmentSuccesFragment"
+        android:label="shipment_succes_fragment"
+        tools:layout="@layout/shipment_succes_fragment" >
+        <action
+            android:id="@+id/action_shipmentSuccesFragment_to_shipmentListFragment"
+            app:destination="@id/shipmentListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shipmentErrorFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.ShipmentErrorFragment"
+        android:label="shipment_error_fragment"
+        tools:layout="@layout/shipment_error_fragment" />
 
 
 </navigation>
