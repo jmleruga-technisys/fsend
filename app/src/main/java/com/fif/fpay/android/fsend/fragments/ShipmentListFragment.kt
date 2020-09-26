@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -81,6 +82,10 @@ class ShipmentListFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        sentShipments.setOnClickListener {
+            findNavController().navigate(R.id.action_shipmentListFragment_to_shipmentInputCodeFragment)
+        }
 
         viewModel.gotShipments.observe(viewLifecycleOwner, Observer {result ->
             result.getContentIfNotHandled()?.let {shipments ->

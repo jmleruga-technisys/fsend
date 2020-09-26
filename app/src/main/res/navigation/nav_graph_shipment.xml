@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_shipmentListFragment_to_shipmentDetailFragment"
             app:destination="@id/shipmentDetailFragment" />
+        <action
+            android:id="@+id/action_shipmentListFragment_to_shipmentInputCodeFragment"
+            app:destination="@id/shipmentInputCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/shipmentDetailFragment"

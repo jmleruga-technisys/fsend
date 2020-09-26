@@ -28,8 +28,8 @@ class ShipmentInputCodeFragment : BaseFragment() {
         return inflater.inflate(R.layout.shipment_input_code_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         viewModel.validatedQr.observe(viewLifecycleOwner, Observer { result ->
             result.let {
@@ -38,10 +38,8 @@ class ShipmentInputCodeFragment : BaseFragment() {
             }
         })
 
-        val inputText = inputTextCodigo.editText?.text.toString()
-
         cmdInputAceptar.setOnClickListener {
-            viewModel.setFinalize(inputText){
+            viewModel.setFinalize(inputTextCodigo.editText?.text.toString()){
                 findNavController().navigate(R.id.action_shipmentQrFragment_to_shipmentErrorFragment)
             }
         }
