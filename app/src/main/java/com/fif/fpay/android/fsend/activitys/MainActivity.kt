@@ -1,11 +1,11 @@
-package com.fif.fpay.android.fsend
+package com.fif.fpay.android.fsend.activitys
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -22,7 +22,10 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.mapFragment, R.id.shipmentListFragment, R.id.configurationsFragment))
+            R.id.mapFragment,
+            R.id.shipmentListFragment,
+            R.id.configurationsFragment
+        ))
        // setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

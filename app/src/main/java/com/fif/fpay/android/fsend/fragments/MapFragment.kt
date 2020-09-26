@@ -1,20 +1,17 @@
-package com.fif.fpay.android.fsend
+package com.fif.fpay.android.fsend.fragments
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.data.DirectionResponses
-import com.fif.fpay.android.fsend.fragments.ShipmentListFragment
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -23,7 +20,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.PolyUtil
-import kotlinx.android.synthetic.main.select_shipment_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,7 +91,10 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
     private fun getPolyline(myLocation:String,customerLocation:String){
 
-        val apiServices = RetrofitClient.apiServices(requireContext())
+        val apiServices =
+            RetrofitClient.apiServices(
+                requireContext()
+            )
         apiServices.getDirection(myLocation, customerLocation, getString(R.string.api_key))
             .enqueue(object : Callback<DirectionResponses> {
                 override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
@@ -140,7 +139,8 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
                 .baseUrl(context.resources.getString(R.string.base_url))
                 .build()
 
-            return retrofit.create<ApiServices>(ApiServices::class.java)
+            return retrofit.create<ApiServices>(
+                ApiServices::class.java)
         }
     }
 
@@ -152,7 +152,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
                 .setAction("Iniciar entrega") {
                     findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment)
                 }
-                .setActionTextColor(getResources().getColor(R.color.sap_green ))
+                .setActionTextColor(getResources().getColor(R.color.sap_green))
                 .show()
         }
 

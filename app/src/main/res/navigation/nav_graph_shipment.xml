@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.fif.fpay.android.fsend.MapFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
         <action
@@ -84,6 +84,16 @@
             android:id="@+id/action_shipmentInputCodeFragment_to_shipmentErrorFragment"
             app:destination="@id/shipmentErrorFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/dashboard"
+        android:name="com.fif.fpay.android.fsend.Dashboard"
+        android:label="fragment_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
 
 
 </navigation>

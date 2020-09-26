@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_login"
+    app:startDestination="@id/initFsendFragment">
+
+    <fragment
+        android:id="@+id/loginFragment2"
+        android:name="com.fif.fpay.android.fsend.LoginFragment"
+        android:label="fragment_login2"
+        tools:layout="@layout/fragment_login2" />
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.fif.fpay.android.fsend.OnboardingFragment"
+        android:label="fragment_onboarding"
+        tools:layout="@layout/fragment_onboarding" />
+    <fragment
+        android:id="@+id/initFsendFragment"
+        android:name="com.fif.fpay.android.fsend.InitFsendFragment"
+        android:label="fragment_init_fsend"
+        tools:layout="@layout/fragment_init_fsend" >
+        <action
+            android:id="@+id/action_initFsendFragment_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
+        <action
+            android:id="@+id/action_initFsendFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment" />
+    </fragment>
+</navigation>
