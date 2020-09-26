@@ -19,4 +19,46 @@
     <string name="title_configurations">Configuraciones</string>
     <string name="title_dashboard">Mis Pedidos</string>
     <string name="title_maps">Mapa</string>
+
+    <!-- Error messages-->
+    <!-- Generic -->
+    <string name="error_generic">Ha ocurrido un error inesperado, disculpe las molestias</string>
+    <string name="error_bad_input">Los datos ingresados son incorrectos</string>
+    <string name="error_service_generic">Hubo un problema con el llamado al servicio. Intente nuevamente</string>
+    <string name="error_root_device">El dispositivo no es seguro</string>
+    <string name="error_404">URL no encontrada</string>
+    <!-- Login -->
+    <string name="error_invalid_rut">El RUT no es válido.</string>
+    <string name="error_invalid_phone">El formato de teléfono es inválido</string>
+    <string name="error_invalid_name">El formato de nombre es inválido</string>
+    <string name="error_invalid_lastname">El formato de apellido es inválido</string>
+    <string name="error_invalid_email">El formato de email es inválido</string>
+    <string name="error_invalid_document">El formato de documento es inválido</string>
+    <string name="error_password_invalid">La clave ingresada no es válida</string>
+    <string name="error_invalid_terms">Los términos y condiciones seleccionados no son válidos</string>
+    <string name="error_user_nc">NC</string>
+    <!-- P2P -->
+    <string name="error_no_permissions">No se tienen permisos de lectura para los contactos</string>
+    <string name="error_no_contacts">No se encontraron contactos en el dispositivo</string>
+    <!-- Error friendly messages -->
+    <!-- Generic -->
+    <string name="friendlyMessage_error_generic">Ha ocurrido un error inesperado, disculpe las molestias</string>
+    <string name="friendlyMessage_error_bad_input">Los datos ingresados son incorrectos</string>
+    <string name="friendlyMessage_error_service_generic">Hubo un problema con el llamado al servicio. Intente nuevamente (default)</string>
+    <string name="friendlyMessage_error_root_device">El dispositivo no es seguro</string>
+    <string name="friendlyMessage_error_404">URL no encontrada</string>
+    <!-- Login -->
+    <string name="friendlyMessage_error_invalid_rut">El RUT no es válido.</string>
+    <string name="friendlyMessage_error_invalid_phone">El formato de teléfono es inválido</string>
+    <string name="friendlyMessage_error_invalid_name">El formato de nombre es inválido</string>
+    <string name="friendlyMessage_error_invalid_lastname">El formato de apellido es inválido</string>
+    <string name="friendlyMessage_error_invalid_email">El formato de email es inválido</string>
+    <string name="friendlyMessage_error_invalid_document">El formato de documento es inválido</string>
+    <string name="friendlyMessage_error_password_invalid">La clave ingresada no es válida</string>
+    <string name="friendlyMessage_error_invalid_terms">Los términos y condiciones seleccionados no son válidos</string>
+    <string name="friendlyMessage_error_user_nc">NC</string>
+    <!-- P2P -->
+    <string name="friendlyMessage_error_no_permissions">No se tienen permisos de lectura para los contactos</string>
+    <string name="friendlyMessage_error_no_contacts">No se encontraron contactos en el dispositivo</string>
+
 </resources>
