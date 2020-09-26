@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_shipmentQrFragment_to_shipmentErrorFragment"
             app:destination="@id/shipmentErrorFragment" />
+        <action
+            android:id="@+id/action_shipmentQrFragment_to_shipmentInputCodeFragment"
+            app:destination="@id/shipmentInputCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -60,7 +63,23 @@
         android:id="@+id/shipmentErrorFragment"
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentErrorFragment"
         android:label="shipment_error_fragment"
-        tools:layout="@layout/shipment_error_fragment" />
+        tools:layout="@layout/shipment_error_fragment" >
+        <action
+            android:id="@+id/action_shipmentErrorFragment_to_shipmentDetailFragment"
+            app:destination="@id/shipmentDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shipmentInputCodeFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.ShipmentInputCodeFragment"
+        android:label="shipment_input_code_fragment"
+        tools:layout="@layout/shipment_input_code_fragment" >
+        <action
+            android:id="@+id/action_shipmentInputCodeFragment_to_shipmentSuccesFragment"
+            app:destination="@id/shipmentSuccesFragment" />
+        <action
+            android:id="@+id/action_shipmentInputCodeFragment_to_shipmentErrorFragment"
+            app:destination="@id/shipmentErrorFragment" />
+    </fragment>
 
 
 </navigation>
