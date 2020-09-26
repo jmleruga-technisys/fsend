@@ -92,6 +92,9 @@ class MapFragment : Fragment(), OnMapReadyCallback , GoogleMap.OnMarkerClickList
 
         //map.addMarker()
 
+
+
+
     }
 
 
