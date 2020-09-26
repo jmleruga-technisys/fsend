@@ -36,6 +36,7 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
         holder.addressTitle.text = shipment.clientInfo.address.fullAddress
         holder.addressSubtitle.text = shipment.clientInfo.address.department
 
+
     }
 
     override fun getItemCount(): Int {
