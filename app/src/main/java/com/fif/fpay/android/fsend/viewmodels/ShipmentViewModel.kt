@@ -44,7 +44,7 @@ class ShipmentViewModel : ViewModel() {
                     "220294020",
                     Address("Nuestras Malvinas 277, Glew", "", "Casa blanca")
                 ),
-                "CREATED"
+                "FAILED"
             ),
             Shipment(
                 arrayListOf(
@@ -57,6 +57,18 @@ class ShipmentViewModel : ViewModel() {
                     Address("Calle 10 1077, Glew", "", "depto 4D")
                 ),
                 "CREATED"
+            ),
+            Shipment(
+                arrayListOf(
+                    Product("Vino", 2.0, "Unidades"),
+                    Product("Fernet", 1.0, "Litro")
+                ),
+                ClientInfo(
+                    "Tarry Pollo",
+                    "220294020",
+                    Address("Nuestras Malvinas 277, Glew", "", "Casa blanca")
+                ),
+                "IN_PROGRESS"
             )
         )
     }

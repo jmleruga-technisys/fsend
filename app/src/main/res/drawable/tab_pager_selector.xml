@@ -2,8 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true">
         <shape
-            android:shape="line"
-            android:innerRadius="0dp"
+            android:shape="rectangle"
             android:thickness="5dp"
             android:useLevel="false">
             <solid android:color="@color/color_main_green"/>
@@ -11,9 +10,8 @@
     </item>
     <item>
         <shape
-            android:shape="line"
-            android:innerRadius="0dp"
-            android:thickness="5dp"
+            android:shape="rectangle"
+            android:thickness="1dp"
             android:useLevel="false">
             <solid android:color="@color/extra_white"/>
         </shape>
