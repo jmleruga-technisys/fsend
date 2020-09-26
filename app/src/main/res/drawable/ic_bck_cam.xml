@@ -1,0 +1,30 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="vector"
+    android:width="360dp"
+    android:height="575dp"
+    android:viewportWidth="360"
+    android:viewportHeight="575">
+    <group android:name="group"/>
+    <group android:name="wrapper">
+        <clip-path
+            android:name="cp1"
+            android:pathData="M 0 -65 L 360 -65 L 360 575 L 0 575 Z"/>
+        <group android:name="p2m_and2">
+            <group android:name="folder_1">
+                <path
+                    android:name="exclusion_1"
+                    android:pathData="M 0 575 L 0 0 L 360 0 L 360 575 L 0 575 Z M 92 124 C 85.65 124 79.5 125.24 73.71 127.69 C 68.11 130.06 63.08 133.45 58.77 137.77 C 54.45 142.08 51.06 147.11 48.69 152.7 C 46.24 158.5 45 164.65 45 171 L 45 348 C 45 354.34 46.24 360.5 48.69 366.29 C 51.06 371.89 54.45 376.92 58.77 381.23 C 63.08 385.55 68.11 388.94 73.71 391.31 C 79.5 393.76 85.65 395 92 395 L 268 395 C 274.34 395 280.5 393.76 286.29 391.31 C 291.89 388.94 296.92 385.55 301.23 381.23 C 305.55 376.92 308.94 371.89 311.31 366.29 C 313.76 360.5 315 354.34 315 348 L 315 171 C 315 164.65 313.76 158.5 311.31 152.7 C 308.94 147.11 305.55 142.08 301.23 137.77 C 296.92 133.45 291.89 130.06 286.29 127.69 C 280.5 125.24 274.34 124 268 124 L 92 124 Z"
+                    android:fillColor="#000"
+                    android:fillAlpha="0.3"
+                    android:strokeWidth="1"
+                    android:fillType="evenOdd"/>
+             <!--   <path
+                    android:name="line_1"
+                    android:pathData="M 16.09 283.43 L 343.91 283.43 L 16.09 283.43 Z"
+                    android:strokeColor="#62ff00"
+                    android:strokeWidth="7"/> -->
+            </group>
+        </group>
+    </group>
+</vector>

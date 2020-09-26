@@ -11,4 +11,9 @@
     <string name="api_key">AIzaSyC3RwBupXyFdul5XtIAWjDsF9f8ogyLam4</string>
     <string name="callUser"><u>Llamar</u></string>
     <string name="no_shipment_text">No hay envíos para entregar</string>
+
+    <string name="shipmentQrToolbarTitle">Seleccionar metodo de entrega</string>
+    <string name="personal_data">Validación de datos</string>
+    <string name="accept_button">Aceptar</string>
+
 </resources>

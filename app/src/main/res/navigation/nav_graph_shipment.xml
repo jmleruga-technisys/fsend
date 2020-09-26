@@ -21,5 +21,13 @@
         android:label="fragment_shipment_detail"
         tools:layout="@layout/fragment_shipment_detail" >
 
+        <action
+            android:id="@+id/action_shipmentDetailFragment_to_shipmentQrFragment"
+            app:destination="@id/shipmentQrFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/shipmentQrFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.ShipmentQrFragment"
+        android:label="shipment_qr_fragment"
+        tools:layout="@layout/shipment_qr_fragment" />
 </navigation>
