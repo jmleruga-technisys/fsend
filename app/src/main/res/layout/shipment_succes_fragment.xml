@@ -52,7 +52,7 @@
             android:text="Ya entregaste el pedido."
             android:textColor="#4D4D4D"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/cmdListo"
+            app:layout_constraintBottom_toTopOf="@+id/cmdFinalizarSucces"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -72,7 +72,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/cmdListo"
+            android:id="@+id/cmdFinalizarSucces"
             android:layout_width="0dp"
             android:layout_height="75dp"
             android:layout_marginStart="16dp"

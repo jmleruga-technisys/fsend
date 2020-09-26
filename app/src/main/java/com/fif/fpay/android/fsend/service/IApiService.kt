@@ -16,4 +16,10 @@ interface IApiService {
          @Query("userId") userId: String
      ): Response<ArrayList<Shipment>?>
 
+    @PATCH("/orders/{id}")
+    suspend fun finalizeOrder(
+        @Path("id") id: String,
+        @Body shortcode: String,
+        @Body state: String
+    ): Response<Any>
 }

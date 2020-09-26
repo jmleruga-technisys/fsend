@@ -22,10 +22,15 @@ typealias OnFailure = (IError) -> Unit?
 
 class ShipmentViewModel : ViewModel() {
     var shipments: ArrayList<Shipment>? = null
+    var currentShipment: Shipment? = null
     private val repository: IApiRepository = ApiRepository()
     private var userId = "01"
     var gotShipments: LiveData<Event<ArrayList<Shipment>?>>
     private var clientShipmentLiveData: MutableLiveData<Resource<ArrayList<Shipment>>> = MutableLiveData()
+
+    var qrLiveData = MutableLiveData<Resource<Boolean?>>()
+    var validatedQr: LiveData<Event<Boolean?>>
+
 
     init {
         //mockShipments()
@@ -34,6 +39,13 @@ class ShipmentViewModel : ViewModel() {
             when(response.status) {
                 Status.SUCCESS ->
                     Event(response.data)
+                else -> Event(null)
+            }
+        }
+
+        validatedQr = Transformations.map(qrLiveData) {
+            when (it.status) {
+                Status.SUCCESS -> Event(true)
                 else -> Event(null)
             }
         }
@@ -140,5 +152,18 @@ class ShipmentViewModel : ViewModel() {
             })
         }
         //success.invoke(mockPaymentInfo())
+    }
+
+
+    fun setFinalize(shortcode: String, failure: OnFailure) {
+        GlobalScope.async {
+            repository.finalizeOrder(currentShipment!!.id,shortcode,currentShipment!!.state,
+                success = {
+                    qrLiveData.value = Resource.success(true)
+                },
+                failure = {
+                    failure.invoke(it)
+                })
+        }
     }
 }

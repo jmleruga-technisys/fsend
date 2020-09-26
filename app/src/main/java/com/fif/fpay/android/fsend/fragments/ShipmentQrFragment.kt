@@ -13,9 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.fif.fpay.android.fsend.CustomAlertDialog
 import com.fif.fpay.android.fsend.R
+import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.Detector.Detections
@@ -30,7 +33,7 @@ class ShipmentQrFragment : BaseFragment(), QRReaderIteract {
     private var isProcessing: Boolean=false;
     private var lastDetectedQR: String=""
     private val MY_PERMISSIONS_REQUEST_CAMERA: Int = 13
-    //private val viewModel: PaymentsViewModel by activityViewModels()
+    private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
     private lateinit var barcodeDetector : BarcodeDetector
     private lateinit var cameraSource: CameraSource
 
@@ -51,30 +54,12 @@ class ShipmentQrFragment : BaseFragment(), QRReaderIteract {
             onBackPressed()
         }
 
-//        viewModel.validatedPaymentIntention.observe(viewLifecycleOwner, Observer { result ->
-//            result.getContentIfNotHandled()?.let {
-//                hideLoading()
-//                validQR()
-//            }
-//        })
-
-//        viewModel.errorPaymentIntention.observe(viewLifecycleOwner, Observer { result ->
-//            result.getContentIfNotHandled()?.let {
-//                hideLoading()
-//                CustomAlertDialog(requireActivity()).setBasicProperties(
-//                    it.message!!,
-//                    R.string.accept_button,
-//                    DialogInterface.OnClickListener { _, _ ->
-//                        //Nothing
-//                    },
-//                    null,
-//                    null,
-//                    null,
-//                    null
-//                ).show()
-//            }
-//        })
-
+        viewModel.validatedQr.observe(viewLifecycleOwner, Observer { result ->
+            result.let {
+                hideLoading()
+                validQR()
+            }
+        })
     }
 
 
@@ -202,14 +187,16 @@ class ShipmentQrFragment : BaseFragment(), QRReaderIteract {
 
     fun validQR(){
         cameraSource.stop()
-        findNavController().navigate(R.id.action_shipmentDetailFragment_to_shipmentQrFragment)
+        findNavController().navigate(R.id.action_shipmentQrFragment_to_shipmentSuccesFragment)
     }
 
     override fun OnSuccessQR(result: String) {
         requireActivity().runOnUiThread {
             showLoading()
         }
-        //viewModel.getPaymentMethods(result)
+        viewModel.setFinalize(result){
+            findNavController().navigate(R.id.action_shipmentQrFragment_to_shipmentErrorFragment)
+        }
     }
 
 }

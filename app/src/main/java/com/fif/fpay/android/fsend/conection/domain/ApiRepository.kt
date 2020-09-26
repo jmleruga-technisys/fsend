@@ -19,6 +19,14 @@ interface IApiRepository {
         success: OnSuccess<ArrayList<Shipment>?>,
         failure: OnFailure
     )
+
+    suspend fun finalizeOrder(
+        id: String,
+        shortcode: String,
+        state: String,
+        success: OnSuccess<Boolean>,
+        failure: OnFailure
+    )
 }
 
 class ApiRepository: IApiRepository {
@@ -37,6 +45,40 @@ class ApiRepository: IApiRepository {
 
                 if (result.isSuccessful){
                         success(result.body()!!)
+                } else {
+                    failure(
+                        DError(
+                            result.code().toString(),
+                            result.message().toString(),
+                            result.message().toString()
+                        )
+                    )
+                }
+            } catch (ex: BusinessException) {
+                failure(DError("400", ex.message.toString()))
+            } catch (ex: TechnicalException) {
+                failure(DError("500", ex.message.toString()))
+            } catch (ex: Exception) {
+                failure(GenericError.ERROR_SERVICE_GENERIC)
+            }
+
+        }
+    }
+
+
+    override suspend fun finalizeOrder(
+        id: String,
+        shortcode: String,
+        state: String,
+        success: OnSuccess<Boolean>,
+        failure: OnFailure
+    ) {
+        GlobalScope.async {
+            try {
+                val result = endpoind.finalizeOrder(id,shortcode,state)
+
+                if (result.isSuccessful){
+                    success(true)
                 } else {
                     failure(
                         DError(
