@@ -10,7 +10,6 @@ import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private val navController by lazy { findNavController(R.id.nav_host_fragment) } //1
     private lateinit var viewModel: ShipmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

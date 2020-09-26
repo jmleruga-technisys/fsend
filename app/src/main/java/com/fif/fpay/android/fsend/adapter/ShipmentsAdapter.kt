@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.data.Shipment
@@ -44,7 +45,7 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var addressTitle: TextView = view.findViewById<View>(R.id.addressTitle) as TextView
         var addressSubtitle: TextView = view.findViewById<View>(R.id.addressSubtitle) as TextView
-        var card: CardView = view.findViewById<View>(R.id.cardView) as CardView
+        var card: ConstraintLayout = view.findViewById<View>(R.id.cardView) as ConstraintLayout
         var shipment: Shipment? = null
 
         init {
@@ -52,7 +53,7 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
                 val onClick: (View) -> Unit = {
                     lastSelectedPosition = adapterPosition
                     notifyDataSetChanged()
-                    selectedCallback.invoke(shipmentList.first { it == shipment })
+                    //selectedCallback.invoke(it)
                 }
                 card.setOnClickListener(onClick)
             }

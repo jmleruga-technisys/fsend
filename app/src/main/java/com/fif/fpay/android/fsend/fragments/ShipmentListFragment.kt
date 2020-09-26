@@ -34,7 +34,7 @@ class ShipmentListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
+
         if(viewModel.shipments != null && viewModel.shipments!!.isNotEmpty()){
             shipmentsGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.VISIBLE
@@ -44,6 +44,7 @@ class ShipmentListFragment : Fragment() {
                 selectedShipment = selected
                 //Voy al detalle findNavController().navigate(R.id.action)
             }
+            shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
         }else{
             noShipmentGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.GONE
