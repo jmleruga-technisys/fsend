@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="H,3:1"
             android:layout_marginTop="16dp"
-            android:background="@drawable/logo"
+            android:background="@drawable/logo_fsend"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

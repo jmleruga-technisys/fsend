@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_shipment"
-    app:startDestination="@id/shipmentDetailFragment"
+    app:startDestination="@id/shipmentListFragment"
     tools:ignore="UnusedNavigation">
     <fragment
         android:id="@+id/shipmentListFragment"
@@ -30,4 +30,16 @@
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentQrFragment"
         android:label="shipment_qr_fragment"
         tools:layout="@layout/shipment_qr_fragment" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.fif.fpay.android.fsend.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/configurationsFragment"
+        android:name="com.fif.fpay.android.fsend.ConfigurationsFragment"
+        android:label="fragment_configurations"
+        tools:layout="@layout/fragment_configurations" />
+
+
 </navigation>
