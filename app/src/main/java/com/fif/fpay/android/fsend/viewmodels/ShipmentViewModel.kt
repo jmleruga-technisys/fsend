@@ -1,35 +1,42 @@
 package com.fif.fpay.android.fsend.viewmodels
 
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.fif.fpay.android.fsend.commons.AbsentLiveData
+import com.fif.fpay.android.fsend.commons.Event
 import com.fif.fpay.android.fsend.commons.Resource
+import com.fif.fpay.android.fsend.commons.Status
+import com.fif.fpay.android.fsend.conection.domain.ApiRepository
+import com.fif.fpay.android.fsend.conection.domain.IApiRepository
 import com.fif.fpay.android.fsend.data.*
-import com.fif.fpay.android.fsend.service.APIClient
-import com.fif.fpay.android.fsend.service.IApiInterface
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.time.LocalDate
+import com.fif.fpay.android.fsend.errors.IError
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.time.LocalDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 
+typealias OnSuccess<T> = (T) -> Unit?
+typealias OnFailure = (IError) -> Unit?
 
 class ShipmentViewModel : ViewModel() {
     var shipments: ArrayList<Shipment>? = null
-    var iApiService: IApiInterface? = null
-    var getClientShipment: LiveData<Resource<Any>>? = null
-    private var clientShipmentLiveData: MutableLiveData<Any> = MutableLiveData()
-    //private val onboardingRepository: IOnboardingRepository = OnboardingRepository()
+    private val repository: IApiRepository = ApiRepository()
+    private var userId = "01"
+    var gotShipments: LiveData<Event<ArrayList<Shipment>?>>
+    private var clientShipmentLiveData: MutableLiveData<Resource<ArrayList<Shipment>>> = MutableLiveData()
 
     init {
-        mockShipments()
-        iApiService = APIClient.client!!.create(IApiInterface::class.java)
+        //mockShipments()
+
+        gotShipments = Transformations.map(clientShipmentLiveData) { response ->
+            when(response.status) {
+                Status.SUCCESS ->
+                    Event(response.data)
+                else -> Event(null)
+            }
+        }
 
     }
 
@@ -119,28 +126,19 @@ class ShipmentViewModel : ViewModel() {
         }
     }
 
-
-//    var getCustomerType: LiveData<Resource<Any>>
-//
-//
-//    private var customerIdLiveData: MutableLiveData<Any> = MutableLiveData()
-//
-//    var getAskPassword: LiveData<Event<String?>>
-//
-//    init {
-//        getCustomerType = Transformations.switchMap(customerIdLiveData) {
-//            if (it == null)
-//                AbsentLiveData.create()
-//            else {
-//                //onboardingRepository.getClientTypeLiveData(xVersion, it)
-//            }
-//        }
-//
-//        getAskPassword = Transformations.map(getCustomerType) { response ->
-//            when(response.status) {
-//                Status.ERROR -> Event(response.message)
-//                else -> Event(null)
-//            }
-//        }
-//    }
+    fun getShipments(failure: OnFailure) {
+        GlobalScope.async {
+            repository.getOrders(userId,
+            success = {
+                it?.let {
+                    shipments = it
+                    clientShipmentLiveData.value = Resource.success(it)
+                }
+            },
+            failure = {
+                failure.invoke(it)
+            })
+        }
+        //success.invoke(mockPaymentInfo())
+    }
 }
