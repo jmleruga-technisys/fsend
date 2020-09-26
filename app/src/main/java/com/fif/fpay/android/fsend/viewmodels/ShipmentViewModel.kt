@@ -1,24 +1,34 @@
 package com.fif.fpay.android.fsend.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.fif.fpay.android.fsend.commons.AbsentLiveData
-import com.fif.fpay.android.fsend.commons.Event
 import com.fif.fpay.android.fsend.commons.Resource
-import com.fif.fpay.android.fsend.commons.Status
 import com.fif.fpay.android.fsend.data.Address
 import com.fif.fpay.android.fsend.data.ClientInfo
 import com.fif.fpay.android.fsend.data.Product
 import com.fif.fpay.android.fsend.data.Shipment
+import com.fif.fpay.android.fsend.service.APIClient
+import com.fif.fpay.android.fsend.service.IApiInterface
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 class ShipmentViewModel : ViewModel() {
     var shipments: ArrayList<Shipment>? = null
+    var iApiService:IApiInterface?= null
+    var getClientShipment : LiveData<Resource<Any>>? = null
+    private var clientShipmentLiveData: MutableLiveData<Any> = MutableLiveData()
     //private val onboardingRepository: IOnboardingRepository = OnboardingRepository()
 
     init {
         mockShipments()
+        iApiService = APIClient.client!!.create(IApiInterface::class.java)
+
     }
 
     fun mockShipments() {
@@ -72,6 +82,11 @@ class ShipmentViewModel : ViewModel() {
             )
         )
     }
+
+
+
+
+
 //    var getCustomerType: LiveData<Resource<Any>>
 //
 //
