@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#007A33</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#e40046</color>
+
+    <color name="transparent">#00ffffff</color>
+    <color name="extra_white">#ffffff</color>
+
+    <color name="color_main_green">#43b02a</color>
+    <color name="color_dark_green">#007A33</color>
+    <color name="color_main_orange">#FFB500</color>
+    <color name="color_dark_orange">#FF5F00</color>
+    <color name="color_red_error">#CE3A37</color>
+    <color name="color_red_error_2">#E10034</color>
+    <color name="color_main_red">#E20041</color>
+    <color name="color_dark_red">#9B2743</color>
+    <color name="gray100">#16181F</color>
+    <color name="gray80">#444b62</color>
+    <color name="gray60">#838AA2</color>
+    <color name="gray40">#A2A7BA</color>
+    <color name="gray20">#CACED8</color>
+    <color name="gray10">#E4E6EB</color>
+    <color name="gray7">#F5F6F7</color>
+    <color name="gray5">#F8F8F8</color>
+    <color name="gray2">#FAFAFA</color>
+    <color name="shadow_button">#444b62</color>
+
+    <!-- logo Main -->
+    <color name="logo_main_dark_grey">#55585a</color>
+    <color name="logo_main_light_blue">#0072ce</color>
+    <color name="logo_main_blue">#003594</color>
+</resources>
