@@ -3,10 +3,10 @@ package com.fif.fpay.android.fsend.data
 import com.google.gson.annotations.SerializedName
 
 data class Address(
-    @SerializedName("position")
-    var position: Position,
-    @SerializedName("fullAddress")
+    @SerializedName("Location")
+    var location: Location,
+    @SerializedName("FullAddress")
     var fullAddress: String,
-    @SerializedName("additionalInfo")
+    @SerializedName("AdditionalInfo")
     var additionalInfo: String?
 )

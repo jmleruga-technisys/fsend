@@ -3,12 +3,12 @@ package com.fif.fpay.android.fsend.data
 import com.google.gson.annotations.SerializedName
 
 data class ClientInfo (
-    @SerializedName("name")
+    @SerializedName("Name")
     var name: String,
-    @SerializedName("phone")
+    @SerializedName("Phone")
     var phone: String,
-    @SerializedName("address")
+    @SerializedName("Address")
     var address: Address,
-    @SerializedName("timeRange")
+    @SerializedName("TimeRange")
     var timeRange: TimeRange
 )

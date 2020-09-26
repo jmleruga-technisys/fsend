@@ -3,12 +3,12 @@ package com.fif.fpay.android.fsend.data
 import com.google.gson.annotations.SerializedName
 
 data class Product(
-    @SerializedName("name")
+    @SerializedName("Name")
     var name: String,
-    @SerializedName("quantity")
+    @SerializedName("Quantity")
     var quantity: Double,
-    @SerializedName("unit")
+    @SerializedName("Unit")
     var unit: String,
-    @SerializedName("image")
+    @SerializedName("Image")
     var image: String
 )

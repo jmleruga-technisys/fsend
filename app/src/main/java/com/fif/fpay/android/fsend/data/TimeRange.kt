@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 
 data class TimeRange (
-    @SerializedName("from")
-    var from: LocalDateTime,
-    @SerializedName("to")
-    var to: LocalDateTime
+    @SerializedName("From")
+    var from: String,
+    @SerializedName("To")
+    var to: String
 )

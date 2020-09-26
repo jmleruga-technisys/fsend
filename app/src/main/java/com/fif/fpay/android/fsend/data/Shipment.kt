@@ -5,14 +5,16 @@ import com.fif.fpay.android.fsend.data.Product
 import com.google.gson.annotations.SerializedName
 
 data class Shipment (
-    @SerializedName("products")
-    var products : ArrayList<Product>,
-    @SerializedName("clientInfo")
+    @SerializedName("Products")
+    var products : List<Product>,
+    @SerializedName("ClientInfo")
     var clientInfo: ClientInfo,
-    @SerializedName("state")
+    @SerializedName("State")
     var state: String,
-    @SerializedName("id")
+    @SerializedName("Shortcode")
+    var shortcode : String,
+    @SerializedName("Id")
     var id: String,
-    @SerializedName("userId")
+    @SerializedName("UserId")
     var userId: String
 )
