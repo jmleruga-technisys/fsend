@@ -44,7 +44,11 @@
         android:id="@+id/mapFragment"
         android:name="com.fif.fpay.android.fsend.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_shipmentDetailFragment"
+            app:destination="@id/shipmentDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/configurationsFragment"
         android:name="com.fif.fpay.android.fsend.ConfigurationsFragment"
