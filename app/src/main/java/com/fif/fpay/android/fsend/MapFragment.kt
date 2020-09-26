@@ -1,18 +1,19 @@
 package com.fif.fpay.android.fsend
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import com.fif.fpay.android.fsend.adapter.CustomInfoWindowsAdapter
 import com.fif.fpay.android.fsend.data.DirectionResponses
-import com.fif.fpay.android.fsend.data.InfoWindowData
 import com.fif.fpay.android.fsend.fragments.ShipmentListFragment
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,7 +21,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.PolyUtil
+import kotlinx.android.synthetic.main.select_shipment_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,7 +54,8 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
     private var goToDirection: String = ""
     private var zoom: Float = 16.0f
     private var mapFragment: SupportMapFragment? = null
-
+    var polyline : PolylineOptions? = null
+    var time : String? = null
     private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
     companion object {
@@ -111,7 +115,8 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
             it!!.remove()
         }
         val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
-        val polyline = PolylineOptions()
+        time = response.body()?.routes?.get(0)?.legs!!.get(0)!!.duration!!.text
+        polyline = PolylineOptions()
             .addAll(PolyUtil.decode(shape))
             .width(8f)
             .color(Color.RED)
@@ -142,9 +147,21 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
     override fun onMarkerClick(marker: Marker?): Boolean {
 
+        view?.let {
+            Snackbar.make(it, "", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Iniciar entrega") {
+                    findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment)
+                }
+                .setActionTextColor(getResources().getColor(R.color.sap_green ))
+                .show()
+        }
+
         val myPositionString = myPosition.latitude.toString()+","+myPosition.longitude.toString()
         val markerPositionString = marker!!.position.latitude.toString()+","+marker!!.position.longitude.toString()
         getPolyline(myPositionString,markerPositionString)
+       time.let {
+           marker.snippet = time
+       }
         marker.showInfoWindow()
         return true
     }
@@ -161,15 +178,19 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         val mKuno = MarkerOptions()
             .position(uno)
             .title("uno")
+            .snippet("")
         val mKdos = MarkerOptions()
             .position(dos)
             .title("uno")
+            .snippet("")
         val mKtres = MarkerOptions()
             .position(tres)
             .title("uno")
+            .snippet("")
         val mKcuatro = MarkerOptions()
             .position(cuatro)
             .title("uno")
+            .snippet("")
         val mKcinco = MarkerOptions()
             .position(cinco)
             .title("uno")
@@ -197,54 +218,35 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         markerOptions1.position(uno)
             .title("Snowqualmie Falls")
             .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
         val markerOptions2 = MarkerOptions()
         markerOptions2.position(dos)
             .title("Snowqualmie Falls")
             .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
         val markerOptions3 = MarkerOptions()
         markerOptions3.position(tres)
             .title("Snowqualmie Falls")
             .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
         val markerOptions4 = MarkerOptions()
         markerOptions4.position(cuatro)
             .title("Snowqualmie Falls")
             .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
         val markerOptions5 = MarkerOptions()
         markerOptions5.position(cinco)
             .title("Snowqualmie Falls")
             .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-
-        val info = InfoWindowData()
-        info.image = "ic_map"
-        info.hotel = "Hotel : excellent hotels available"
-        info.food = "Food : all types of restaurants available"
-        info.transport = "Reach the site by bus, car and train."
-
-        val customInfoWindow = CustomInfoWindowsAdapter(requireContext())
-        map.setInfoWindowAdapter(customInfoWindow)
 
         val m1: Marker = map.addMarker(markerOptions1)
         val m2: Marker = map.addMarker(markerOptions2)
         val m3: Marker = map.addMarker(markerOptions3)
         val m4: Marker = map.addMarker(markerOptions4)
         val m5: Marker = map.addMarker(markerOptions5)
-        m1.tag = info
-        m2.tag = info
-        m3.tag = info
-        m4.tag = info
-        m5.tag = info
+
 
     }
-
 
 
 }
