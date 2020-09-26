@@ -8,5 +8,7 @@ data class Product(
     @SerializedName("quantity")
     var quantity: Double,
     @SerializedName("unit")
-    var unit: String
+    var unit: String,
+    @SerializedName("image")
+    var image: String
 )
