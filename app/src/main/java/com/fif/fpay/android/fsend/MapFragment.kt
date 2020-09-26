@@ -73,24 +73,45 @@ class MapFragment : Fragment(), OnMapReadyCallback , GoogleMap.OnMarkerClickList
         myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
-        map.setOnMarkerClickListener(this)
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap!!
+        map.setOnMarkerClickListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
 
         initDirection = "Nuestras Malvinas 277,Glew"
         goToDirection = "Aranguren 242,Glew"
 
-        var uno:LatLng = LatLng(-34.897568, -58.402854)
-        var dos:LatLng = LatLng(-34.897568, -58.402854)
-        var tres:LatLng = LatLng(-34.897568, -58.402854)
-        var cuatro:LatLng = LatLng(-34.897568, -58.402854)
-        var cinco:LatLng = LatLng(-34.897568, -58.402854)
+        var uno = LatLng(-34.897568, -58.402854)
+        var dos = LatLng(-34.899152, -58.400891)
+        var tres = LatLng(-34.890424, -58.376778)
+        var cuatro = LatLng(-34.887191, -58.381391)
+        var cinco:LatLng = LatLng(-34.874404, -58.379401)
 
 
-        //map.addMarker()
+        val mKuno = MarkerOptions()
+            .position(uno)
+            .title("Nuestras Malvinas 277,Glew")
+        val mKdos = MarkerOptions()
+            .position(dos)
+            .title("uno")
+        val mKtres = MarkerOptions()
+            .position(tres)
+            .title("uno")
+        val mKcuatro = MarkerOptions()
+            .position(cuatro)
+            .title("uno")
+        val mKcinco = MarkerOptions()
+            .position(cinco)
+            .title("uno")
+
+        map.addMarker(mKuno)
+        map.addMarker(mKdos)
+        map.addMarker(mKtres)
+        map.addMarker(mKcuatro)
+        map.addMarker(mKcinco)
 
 
 
