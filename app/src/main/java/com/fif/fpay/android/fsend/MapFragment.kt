@@ -1,31 +1,25 @@
 package com.fif.fpay.android.fsend
 
-import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
+import com.fif.fpay.android.fsend.adapter.CustomInfoWindowsAdapter
 import com.fif.fpay.android.fsend.data.DirectionResponses
+import com.fif.fpay.android.fsend.data.InfoWindowData
 import com.fif.fpay.android.fsend.fragments.ShipmentListFragment
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,7 +28,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -49,10 +42,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MapFragment : Fragment(), OnMapReadyCallback , GoogleMap.OnMarkerClickListener{
+class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListener{
 
     private lateinit var map: GoogleMap
     private lateinit var myPosition: LatLng
+    private var mPolyline : Polyline? = null
     private var initDirection: String = ""
     private var goToDirection: String = ""
     private var zoom: Float = 16.0f
@@ -88,45 +82,17 @@ class MapFragment : Fragment(), OnMapReadyCallback , GoogleMap.OnMarkerClickList
         initDirection = "Nuestras Malvinas 277,Glew"
         goToDirection = "Aranguren 242,Glew"
 
-        var uno = LatLng(-34.897568, -58.402854)
-        var dos = LatLng(-34.899152, -58.400891)
-        var tres = LatLng(-34.890424, -58.376778)
-        var cuatro = LatLng(-34.887191, -58.381391)
-        var cinco:LatLng = LatLng(-34.874404, -58.379401)
+       // addMakers()
 
-
-        val mKuno = MarkerOptions()
-            .position(uno)
-            .title("Nuestras Malvinas 277,Glew")
-        val mKdos = MarkerOptions()
-            .position(dos)
-            .title("uno")
-        val mKtres = MarkerOptions()
-            .position(tres)
-            .title("uno")
-        val mKcuatro = MarkerOptions()
-            .position(cuatro)
-            .title("uno")
-        val mKcinco = MarkerOptions()
-            .position(cinco)
-            .title("uno")
-
-        map.addMarker(mKuno)
-        map.addMarker(mKdos)
-        map.addMarker(mKtres)
-        map.addMarker(mKcuatro)
-        map.addMarker(mKcinco)
-
-
-
+        addInfoMaker()
 
     }
 
 
-    private fun getPolyline(myLocation:LatLng,customerLocation:LatLng){
+    private fun getPolyline(myLocation:String,customerLocation:String){
 
         val apiServices = RetrofitClient.apiServices(requireContext())
-        apiServices.getDirection(myLocation.toString(), customerLocation.toString(), getString(R.string.api_key))
+        apiServices.getDirection(myLocation, customerLocation, getString(R.string.api_key))
             .enqueue(object : Callback<DirectionResponses> {
                 override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
                     drawPolyline(response)
@@ -140,25 +106,19 @@ class MapFragment : Fragment(), OnMapReadyCallback , GoogleMap.OnMarkerClickList
     }
 
     private fun drawPolyline(response: Response<DirectionResponses>) {
+        mPolyline.let {
+            if (it != null)
+            it!!.remove()
+        }
         val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
         val polyline = PolylineOptions()
             .addAll(PolyUtil.decode(shape))
             .width(8f)
             .color(Color.RED)
 
-        val markerInit = MarkerOptions()
-            .position(polyline.points[0])
-            .title(initDirection)
-
-        val markerGoTo = MarkerOptions()
-            .position(polyline.points[polyline.points.size -1])
-            .title(goToDirection)
-
-
         //map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.points[(polyline.points.size-1)/2], zoom-((polyline.points.size/2).toFloat())))
-        map.addPolyline(polyline)
-        map.addMarker(markerInit)
-        map.addMarker(markerGoTo)
+        mPolyline = map.addPolyline(polyline)
+
     }
 
     private interface ApiServices {
@@ -179,10 +139,112 @@ class MapFragment : Fragment(), OnMapReadyCallback , GoogleMap.OnMarkerClickList
         }
     }
 
+
     override fun onMarkerClick(marker: Marker?): Boolean {
-        getPolyline(myPosition,marker!!.position)
+
+        val myPositionString = myPosition.latitude.toString()+","+myPosition.longitude.toString()
+        val markerPositionString = marker!!.position.latitude.toString()+","+marker!!.position.longitude.toString()
+        getPolyline(myPositionString,markerPositionString)
+        marker.showInfoWindow()
         return true
     }
+
+
+    fun addMakers(){
+        var uno = LatLng(-34.897568, -58.402854)
+        var dos = LatLng(-34.899152, -58.400891)
+        var tres = LatLng(-34.890424, -58.376778)
+        var cuatro = LatLng(-34.887191, -58.381391)
+        var cinco:LatLng = LatLng(-34.874404, -58.379401)
+
+
+        val mKuno = MarkerOptions()
+            .position(uno)
+            .title("uno")
+        val mKdos = MarkerOptions()
+            .position(dos)
+            .title("uno")
+        val mKtres = MarkerOptions()
+            .position(tres)
+            .title("uno")
+        val mKcuatro = MarkerOptions()
+            .position(cuatro)
+            .title("uno")
+        val mKcinco = MarkerOptions()
+            .position(cinco)
+            .title("uno")
+            .snippet("")
+
+        map.addMarker(mKuno)
+        map.addMarker(mKdos)
+        map.addMarker(mKtres)
+        map.addMarker(mKcuatro)
+        map.addMarker(mKcinco)
+
+
+    }
+
+    fun addInfoMaker(){
+
+        var uno = LatLng(-34.897568, -58.402854)
+        var dos = LatLng(-34.899152, -58.400891)
+        var tres = LatLng(-34.890424, -58.376778)
+        var cuatro = LatLng(-34.887191, -58.381391)
+        var cinco:LatLng = LatLng(-34.874404, -58.379401)
+
+
+        val markerOptions1 = MarkerOptions()
+        markerOptions1.position(uno)
+            .title("Snowqualmie Falls")
+            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        val markerOptions2 = MarkerOptions()
+        markerOptions2.position(dos)
+            .title("Snowqualmie Falls")
+            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        val markerOptions3 = MarkerOptions()
+        markerOptions3.position(tres)
+            .title("Snowqualmie Falls")
+            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        val markerOptions4 = MarkerOptions()
+        markerOptions4.position(cuatro)
+            .title("Snowqualmie Falls")
+            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        val markerOptions5 = MarkerOptions()
+        markerOptions5.position(cinco)
+            .title("Snowqualmie Falls")
+            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+        val info = InfoWindowData()
+        info.image = "ic_map"
+        info.hotel = "Hotel : excellent hotels available"
+        info.food = "Food : all types of restaurants available"
+        info.transport = "Reach the site by bus, car and train."
+
+        val customInfoWindow = CustomInfoWindowsAdapter(requireContext())
+        map.setInfoWindowAdapter(customInfoWindow)
+
+        val m1: Marker = map.addMarker(markerOptions1)
+        val m2: Marker = map.addMarker(markerOptions2)
+        val m3: Marker = map.addMarker(markerOptions3)
+        val m4: Marker = map.addMarker(markerOptions4)
+        val m5: Marker = map.addMarker(markerOptions5)
+        m1.tag = info
+        m2.tag = info
+        m3.tag = info
+        m4.tag = info
+        m5.tag = info
+
+    }
+
 
 
 }
