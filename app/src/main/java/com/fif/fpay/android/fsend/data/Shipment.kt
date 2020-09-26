@@ -12,5 +12,7 @@ data class Shipment (
     @SerializedName("state")
     var state: String,
     @SerializedName("id")
-    var id: String
+    var id: String,
+    @SerializedName("userId")
+    var userId: String
 )

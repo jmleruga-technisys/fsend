@@ -36,7 +36,7 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
         val shipment: Shipment = shipmentList[position]
 
         holder.addressTitle.text = shipment.clientInfo.address.fullAddress
-        holder.addressSubtitle.text = shipment.clientInfo.address.department
+        holder.addressSubtitle.text = shipment.clientInfo.address.additionalInfo
 
         when(shipment.state){
             "IN_PROGRESS" -> {

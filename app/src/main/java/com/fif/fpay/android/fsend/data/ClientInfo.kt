@@ -8,5 +8,7 @@ data class ClientInfo (
     @SerializedName("phone")
     var phone: String,
     @SerializedName("address")
-    var address: Address
+    var address: Address,
+    @SerializedName("timeRange")
+    var timeRange: TimeRange
 )
