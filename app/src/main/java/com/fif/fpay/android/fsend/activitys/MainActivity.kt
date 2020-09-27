@@ -46,11 +46,11 @@ class MainActivity : AppCompatActivity(), BaseActivity {
 
     override fun hideLoading() {
         progressBar.visibility = View.GONE
-        //nav_host_fragment.alpha = 1F
+        nav_host_fragment.alpha = 1F
     }
 
     override fun showLoading() {
         progressBar.visibility = View.VISIBLE
-        //nav_host_fragment.alpha = 0.51F
+        nav_host_fragment.alpha = 0.51F
     }
 }
