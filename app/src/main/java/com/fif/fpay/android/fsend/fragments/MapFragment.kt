@@ -236,6 +236,31 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
 
     }
 
+
+    fun setCurrent(shipment: Shipment?,marker: Marker?){
+        viewModel.setInProgress(shipment,success = {
+            var shipmentSelected = hashMap!![LatLng(marker!!.position.latitude,marker.position.longitude)]?.let { it1 -> viewModel.shipments!![it1]}
+            val bundle = bundleOf("selected" to Gson().toJson(shipmentSelected).toString())
+            findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment,bundle)
+        },
+        failure = {
+            hideLoading()
+            CustomAlertDialog(requireActivity())
+                .setBasicProperties(
+                    "No se pudo actualizar el listado. Intente nuevamente.",
+                    R.string.accept_button,
+                    DialogInterface.OnClickListener { _, _ ->
+                        //Nothing
+                    },
+                    null,
+                    null,
+                    null,
+                    null
+                ).show()
+        })
+    }
+
+
     private interface ApiServices {
         @GET("maps/api/directions/json")
         fun getDirection(@Query("origin") origin: String,
@@ -262,11 +287,11 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
                 .setAction("Iniciar entrega") {
 
                     var currentExists = viewModel.shipments!!.filter { it.state == "IN_PROGRESS"}.isNotEmpty()
+                    var shipmentSelected = hashMap!![LatLng(marker!!.position.latitude,marker.position.longitude)]?.let { it1 ->
+                        viewModel.shipments!![it1]}
                     if (!currentExists){
-                        val bundle = bundleOf("selected" to Gson().toJson(hashMap!![LatLng(marker!!.position.latitude,marker.position.longitude)]?.let { it1 ->
-                            viewModel.shipments!![it1]
-                        }))
-                        findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment,bundle)
+                        setCurrent(shipmentSelected,marker)
+
                     }else{
                         CustomAlertDialog(requireActivity())
                             .setBasicProperties(
@@ -355,6 +380,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
+
+
 
 
 
