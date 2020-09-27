@@ -105,12 +105,13 @@ class ShipmentViewModel : ViewModel() {
         failure = failure)
     }
 
-    fun setInProgress(shipment: Shipment, failure: OnFailure){
+    fun setInProgress(shipment: Shipment, success: OnSuccess<Boolean>, failure: OnFailure){
         if (currentShipment == null){
             shipment.state = "IN_PROGRESS"
             updateState(shipment, "",
             success = {
                 inProgressLiveData.postValue(Resource.success(it))
+                success.invoke(it)
             },
             failure ={
                 failure.invoke(it)
