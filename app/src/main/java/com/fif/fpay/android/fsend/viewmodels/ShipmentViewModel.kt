@@ -11,10 +11,10 @@ import com.fif.fpay.android.fsend.commons.Status
 import com.fif.fpay.android.fsend.conection.domain.ApiRepository
 import com.fif.fpay.android.fsend.conection.domain.IApiRepository
 import com.fif.fpay.android.fsend.data.*
+import com.fif.fpay.android.fsend.errors.GenericError
 import com.fif.fpay.android.fsend.errors.IError
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import java.time.LocalDateTime
 import kotlin.collections.ArrayList
 
 typealias OnSuccess<T> = (T) -> Unit?
@@ -29,7 +29,10 @@ class ShipmentViewModel : ViewModel() {
     private var clientShipmentLiveData: MutableLiveData<Resource<ArrayList<Shipment>>> = MutableLiveData()
 
     var qrLiveData = MutableLiveData<Resource<Boolean?>>()
+    var inProgressLiveData = MutableLiveData<Resource<Boolean?>>()
+
     var validatedQr: LiveData<Event<Boolean?>>
+    var setInProgress: LiveData<Event<Boolean?>>
 
 
     init {
@@ -50,92 +53,103 @@ class ShipmentViewModel : ViewModel() {
             }
         }
 
+        setInProgress = Transformations.map(inProgressLiveData) {
+            when (it.status) {
+                Status.SUCCESS -> Event(true)
+                else -> Event(null)
+            }
+        }
+
     }
 
     fun mockShipments() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            shipments = arrayListOf(
-//                Shipment(
-//                    arrayListOf(
-//                        Product("Cerveza", 20.0, "Unidades", "Imaging")
-//                    ),
-//                    ClientInfo(
-//                        "Maxi de Glew",
-//                        "220294020",
-//                        Address(
-//                            Position("-34.2", "32.1"), "Aranguren 242, Glew", "Casa blanca"
-//                        ),
-//                        TimeRange(
-//                            LocalDateTime.of(2018, 6, 25, 22, 22, 22),
-//                            LocalDateTime.of(2018, 7, 25, 23, 22, 15)
-//                        )
-//                    ),
-//                    "DELIVERED",
-//                    "1",
-//                    "1"
-//                ),
-//                Shipment(
-//                    arrayListOf(
-//                        Product("Vino", 2.0, "Unidades", ""),
-//                        Product("Fernet", 1.0, "Litro", "")
-//                    ),
-//                    ClientInfo(
-//                        "Tarry Pollo",
-//                        "220294020",
-//                        Address(
-//                            Position("-34.2", "32.1"), "Nuestras Malvinas 277, Glew", "Casa blanca"
-//                        ),
-//                        TimeRange(
-//                            LocalDateTime.of(2018, 6, 25, 22, 22, 22),
-//                            LocalDateTime.of(2018, 7, 25, 23, 22, 15)
-//                        )
-//                    ),
-//                    "FAILED",
-//                    "1",
-//                    "1"
-//                ),
-//                Shipment(
-//                    arrayListOf(
-//                        Product("Desodorantes", 2.0, "Unidades", ""),
-//                        Product("Explosivos", 30.0, "Kilos", "")
-//                    ),
-//                    ClientInfo(
-//                        "Juanito",
-//                        "+5492216057065",
-//                        Address(
-//                            Position("-34.2", "32.1"), "Calle 10 1077, Glew", "depto 4D"
-//                        ),
-//                        TimeRange(
-//                            LocalDateTime.of(2018, 6, 25, 22, 22, 22),
-//                            LocalDateTime.of(2018, 7, 25, 23, 22, 15)
-//                        )
-//                    ),
-//                    "CREATED",
-//                    "1",
-//                    "1"
-//                ),
-//                Shipment(
-//                    arrayListOf(
-//                        Product("Vino", 2.0, "Unidades", ""),
-//                        Product("Fernet", 1.0, "Litro", "")
-//                    ),
-//                    ClientInfo(
-//                        "Tarry Pollo",
-//                        "220294020",
-//                        Address(
-//                            Position("-34.2", "32.1"), "Nuestras Malvinas 277, Glew", "Casa blanca"
-//                        ),
-//                        TimeRange(
-//                            LocalDateTime.of(2018, 6, 25, 22, 22, 22),
-//                            LocalDateTime.of(2018, 7, 25, 23, 22, 15)
-//                        )
-//                    ),
-//                    "IN_PROGRESS",
-//                    "1",
-//                    "1"
-//                )
-//            )
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            shipments = arrayListOf(
+                Shipment(
+                    arrayListOf(
+                        Product("Cerveza", 20.0, "Unidades", "Imaging")
+                    ),
+                    ClientInfo(
+                        "Maxi de Glew",
+                        "220294020",
+                        Address(
+                            Location(Position("-34.2", "32.1")), "Aranguren 242, Glew", "Casa blanca"
+                        ),
+                        TimeRange(
+                            "",
+                            ""
+                        )
+                    ),
+                    "DELIVERED",
+                    "1",
+                    "1",
+                    "1"
+                ),
+                Shipment(
+                    arrayListOf(
+                        Product("Vino", 2.0, "Unidades", ""),
+                        Product("Fernet", 1.0, "Litro", "")
+                    ),
+                    ClientInfo(
+                        "Tarry Pollo",
+                        "220294020",
+                        Address(
+                            Location(Position("-34.2", "32.1")), "Nuestras Malvinas 277, Glew", "Casa blanca"
+                        ),
+                        TimeRange(
+                            "",
+                            ""
+                        )
+                    ),
+                    "FAILED",
+                    "1",
+                    "1",
+                    "1"
+                ),
+                Shipment(
+                    arrayListOf(
+                        Product("Desodorantes", 2.0, "Unidades", ""),
+                        Product("Explosivos", 30.0, "Kilos", "")
+                    ),
+                    ClientInfo(
+                        "Juanito",
+                        "+5492216057065",
+                        Address(
+                            Location(Position("-34.2", "32.1")), "Calle 10 1077, Glew", "depto 4D"
+                        ),
+                        TimeRange(
+                            "",
+                            ""
+                        )
+                    ),
+                    "CREATED",
+                    "1",
+                    "1",
+                "1"
+                ),
+                Shipment(
+                    arrayListOf(
+                        Product("Vino", 2.0, "Unidades", ""),
+                        Product("Fernet", 1.0, "Litro", "")
+                    ),
+                    ClientInfo(
+                        "Tarry Pollo",
+                        "220294020",
+                        Address(
+                            Location(Position("-34.2", "32.1")), "Nuestras Malvinas 277, Glew", "Casa blanca"
+                        ),
+                        TimeRange(
+                            "",
+                            ""
+                        )
+                    ),
+                    "IN_PROGRESS",
+                    "1",
+                    "1",
+                    "1"
+                )
+            )
+        }
     }
 
     fun getShipments(failure: OnFailure) {
@@ -154,16 +168,38 @@ class ShipmentViewModel : ViewModel() {
         //success.invoke(mockPaymentInfo())
     }
 
+    fun setFinalize(shortcode: String, failure: OnFailure){
+        this.updateState(shortcode,
+        success = {
+            qrLiveData.postValue(Resource.success(true))
+        },
+        failure = failure)
+    }
 
-    fun setFinalize(shortcode: String, failure: OnFailure) {
-        GlobalScope.async {
-            repository.finalizeOrder(currentShipment!!.id,shortcode,currentShipment!!.state,
-                success = {
-                    qrLiveData.postValue(Resource.success(true))
-                },
-                failure = {
-                    failure.invoke(it)
-                })
+    fun setInProgress(failure: OnFailure){
+        updateState("",
+        success = {
+            inProgressLiveData.postValue(Resource.success(it))
+        },
+        failure ={
+            failure.invoke(it)
+        })
+    }
+
+
+    fun updateState(shortcode: String, success: OnSuccess<Boolean>, failure: OnFailure) {
+        try {
+            GlobalScope.async {
+                repository.updateState(currentShipment!!.id, shortcode, currentShipment!!.state,
+                    success = {
+                        success.invoke(it)
+                    },
+                    failure = {
+                        failure.invoke(it)
+                    })
+            }
+        }catch (e: Exception){
+            failure.invoke(GenericError.ERROR_BAD_INPUT)
         }
     }
 }

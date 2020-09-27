@@ -1,6 +1,7 @@
 package com.fif.fpay.android.fsend.service
 
 import com.fif.fpay.android.fsend.conection.BaseResponse
+import com.fif.fpay.android.fsend.conection.UpdateStateRequest
 import com.fif.fpay.android.fsend.data.ClientInfo
 import com.fif.fpay.android.fsend.data.Shipment
 import retrofit2.Call
@@ -17,9 +18,8 @@ interface IApiService {
      ): Response<ArrayList<Shipment>?>
 
     @PATCH("/orders/{id}")
-    suspend fun finalizeOrder(
+    suspend fun updateState(
         @Path("id") id: String,
-        @Body shortcode: String,
-        @Body state: String
+        @Body updateStateRequest: UpdateStateRequest
     ): Response<Any>
 }

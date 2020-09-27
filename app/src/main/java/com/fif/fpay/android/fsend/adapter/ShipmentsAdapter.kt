@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RadioButton
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.fif.fpay.android.fsend.R
@@ -13,7 +15,7 @@ import com.fif.fpay.android.fsend.data.Shipment
 
 class ShipmentsAdapter(offersListIn: List<Shipment>,
                        ctx: Context?,
-                       val selectedCallback: ((Shipment) -> Unit)?) : RecyclerView.Adapter<ShipmentsAdapter.ViewHolder>() {
+                       val selectedCardCallback: ((Shipment) -> Unit)?, val selectedButtonCallback: ((Shipment) -> Unit)?) : RecyclerView.Adapter<ShipmentsAdapter.ViewHolder>() {
 
 
 
@@ -82,13 +84,22 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
         var shipment: Shipment? = null
 
         init {
-            if(selectedCallback != null){
+            if(selectedCardCallback != null){
                 val onClick: (View) -> Unit = {
                     lastSelectedPosition = adapterPosition
                     notifyDataSetChanged()
-                    //selectedCallback.invoke(it)
+                    selectedCardCallback.invoke(shipmentList[lastSelectedPosition])
                 }
                 card.setOnClickListener(onClick)
+            }
+
+            if(selectedButtonCallback != null){
+                val onClick: (View) -> Unit = {
+                    lastSelectedPosition = adapterPosition
+                    notifyDataSetChanged()
+                    selectedButtonCallback.invoke(shipmentList[lastSelectedPosition])
+                }
+                button.setOnClickListener(onClick)
             }
         }
     }
