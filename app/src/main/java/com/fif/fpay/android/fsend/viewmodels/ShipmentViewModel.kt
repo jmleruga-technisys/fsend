@@ -13,6 +13,7 @@ import com.fif.fpay.android.fsend.conection.domain.IApiRepository
 import com.fif.fpay.android.fsend.data.*
 import com.fif.fpay.android.fsend.errors.GenericError
 import com.fif.fpay.android.fsend.errors.IError
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlin.collections.ArrayList
@@ -22,6 +23,7 @@ typealias OnFailure = (IError) -> Unit?
 
 class ShipmentViewModel : ViewModel() {
     var shipments: ArrayList<Shipment>? = null
+    var dataFromMarkers: HashMap<LatLng,Int>? = null
     var currentShipment: Shipment? = null
     private val repository: IApiRepository = ApiRepository()
     private var userId = "01"
@@ -29,6 +31,7 @@ class ShipmentViewModel : ViewModel() {
     private var clientShipmentLiveData: MutableLiveData<Resource<ArrayList<Shipment>>> = MutableLiveData()
 
     var qrLiveData = MutableLiveData<Resource<Boolean?>>()
+    var dataFromMarketLiveData = MutableLiveData<Resource<HashMap<LatLng,Int>>>()
     var inProgressLiveData = MutableLiveData<Resource<Boolean?>>()
 
     var validatedQr: LiveData<Event<Boolean?>>

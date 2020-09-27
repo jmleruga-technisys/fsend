@@ -7,11 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.data.DirectionResponses
+import com.fif.fpay.android.fsend.data.Shipment
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.maps.android.PolyUtil
 import kotlinx.android.synthetic.main.custominfowindow.*
 import retrofit2.Call
@@ -54,6 +57,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
     private var mapFragment: SupportMapFragment? = null
     var polyline : PolylineOptions? = null
     var time : String? = null
+    var hashMap: HashMap<LatLng, Int>? = HashMap<LatLng,Int>()
     private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
     companion object {
@@ -105,7 +109,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
     }
 
 
-    private fun getPolyline(myLocation:String,customerLocation:String){
+    private fun getPolyline(myLocation:String,customerLocation:String,marker: Marker?){
 
         val apiServices =
             RetrofitClient.apiServices(
@@ -114,7 +118,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         apiServices.getDirection(myLocation, customerLocation, getString(R.string.api_key))
             .enqueue(object : Callback<DirectionResponses> {
                 override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
-                    drawPolyline(response)
+                    drawPolyline(response,marker)
                     Log.d("bisa dong oke", response.message())
                 }
 
@@ -124,7 +128,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
             })
     }
 
-    private fun drawPolyline(response: Response<DirectionResponses>) {
+    private fun drawPolyline(response: Response<DirectionResponses>,marker: Marker?) {
         mPolyline.let {
             if (it != null)
             it!!.remove()
@@ -133,11 +137,13 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         time = response.body()?.routes?.get(0)?.legs!!.get(0)!!.duration!!.text
         polyline = PolylineOptions()
             .addAll(PolyUtil.decode(shape))
-            .width(8f)
+            .width(12f)
             .color(Color.RED)
 
         //map.moveCamera(CameraUpdateFactory.newLatLngZoom(polyline.points[(polyline.points.size-1)/2], zoom-((polyline.points.size/2).toFloat())))
         mPolyline = map.addPolyline(polyline)
+        marker!!.snippet = time
+        marker.showInfoWindow()
 
     }
 
@@ -162,11 +168,13 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
 
     override fun onMarkerClick(marker: Marker?): Boolean {
-
         view?.let {
             Snackbar.make(it, "", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Iniciar entrega") {
-                    findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment)
+                    val bundle = bundleOf("selected" to Gson().toJson(hashMap!![LatLng(marker!!.position.latitude,marker.position.longitude)]?.let { it1 ->
+                        viewModel.shipments!![it1]
+                    }))
+                    findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment,bundle)
                 }
                 .setActionTextColor(getResources().getColor(R.color.sap_green))
                 .show()
@@ -174,25 +182,24 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
         val myPositionString = myPosition.latitude.toString()+","+myPosition.longitude.toString()
         val markerPositionString = marker!!.position.latitude.toString()+","+marker!!.position.longitude.toString()
-        getPolyline(myPositionString,markerPositionString)
-       time.let {
-           marker.snippet = time
-       }
-        marker.showInfoWindow()
+        getPolyline(myPositionString,markerPositionString, marker)
+
         return true
     }
 
 
     fun addMakers(){
-
-
         for (i in viewModel.shipments!!.indices){
+
+            val state =viewModel!!.shipments!!.get(i).state
+            val ltLong = LatLng(viewModel!!.shipments!![i].clientInfo.address.location.position.latitude.toDouble(),
+                viewModel.shipments!![i].clientInfo.address.location.position.longitude.toDouble())
             val m = MarkerOptions()
-                .position(LatLng(viewModel!!.shipments!![i].clientInfo.address.location.position.latitude.toDouble(),
-                    viewModel.shipments!![i].clientInfo.address.location.position.longitude.toDouble()))
+                .position(ltLong)
                 .title(viewModel!!.shipments!![i].clientInfo.address.fullAddress)
+                .snippet(i.toString())
                 .icon(
-            when(viewModel!!.shipments!!.get(i).state) {
+            when(state) {
                 "IN_PROGRESS" -> {
                     (BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
@@ -205,7 +212,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
                     (BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 }
-                "CREATED" -> {
+                "CREATED","PENDING" -> {
                     (BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
                 }
@@ -219,7 +226,12 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
                 }
             }
                 )
-            map.addMarker(m)
+            if (state == "IN_PROGRESS"||state == "CREATED"||state == "PENDING"){
+                map.addMarker(m)
+            }
+
+            hashMap!![ltLong] = i
+
         }
 //        var uno = LatLng(-34.897568, -58.402854)
 //        var dos = LatLng(-34.899152, -58.400891)
