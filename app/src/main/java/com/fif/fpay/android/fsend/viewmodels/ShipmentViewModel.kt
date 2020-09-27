@@ -80,6 +80,22 @@ class ShipmentViewModel : ViewModel() {
         }
     }
 
+    fun tracking(latitude: String, longitude: String, failure: OnFailure){
+        GlobalScope.async {
+            repository.tracking(
+                currentShipment!!.id,
+                latitude,
+                longitude,
+                success = {
+                    //Do nothing
+                },
+                failure = {
+                    failure.invoke(it)
+                })
+        }
+
+    }
+
     fun setFinalize(shortcode: String, failure: OnFailure){
         var shipment = currentShipment!!
         shipment.state = "DELIVERED"

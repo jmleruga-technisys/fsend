@@ -43,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
+class ShipmentDetailDeliveredFragment : BaseFragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var myPosition: LatLng
@@ -66,7 +66,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_shipment_detail, container, false)
+        return inflater.inflate(R.layout.fragment_shipment_delivered_detail, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -76,16 +76,6 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
         shipmentDetailToolbar?.setNavigationOnClickListener {
             onBackPressed()
         }
-
-        Thread(Runnable { kotlin.run {
-            while(true)
-            {
-                Thread.sleep(10000)
-
-                //     Toast.makeText(requireActivity(), "pasaron 10 seg", Toast.LENGTH_SHORT).show()
-                //REST OF CODE HERE//
-            }
-        } }).start()
 
         requireArguments().get("selected").let {
             infoShipment =  Gson().fromJson(it.toString(), Shipment::class.java)
@@ -103,7 +93,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
         }
 
 
-        myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
+        myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
 
@@ -112,6 +102,9 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap!!
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
+
+        initDirection = "Nuestras Malvinas 277,Glew"
+        goToDirection = "Aranguren 242,Glew"
 
         imgCall.setOnClickListener {
             if(ActivityCompat.checkSelfPermission(this.requireContext(), android.Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED){
@@ -122,13 +115,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
         }
 
         val apiServices = RetrofitClient.apiServices(requireContext())
-
-        val myPositionString =
-            myPosition.latitude.toString() + "," + myPosition.longitude.toString()
-        val markerPositionString =
-            infoShipment.clientInfo.address.location.position!!.latitude.toString() + "," + infoShipment.clientInfo.address.location.position!!.longitude.toString()
-
-        apiServices.getDirection(myPositionString, markerPositionString, getString(R.string.api_key))
+        apiServices.getDirection(initDirection, goToDirection, getString(R.string.api_key))
             .enqueue(object : Callback<DirectionResponses> {
                 override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
                     drawPolyline(response)

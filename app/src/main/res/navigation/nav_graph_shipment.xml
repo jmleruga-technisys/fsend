@@ -23,7 +23,17 @@
         <action
             android:id="@+id/action_shipmentDetailFragment_to_shipmentQrFragment"
             app:destination="@id/shipmentQrFragment" />
+        <action
+            android:id="@+id/action_shipmentDetailFragment_to_shipmentDetailDeliveredFragment"
+            app:destination="@id/shipmentDetailDeliveredFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/shipmentDetailDeliveredFragment"
+        android:name="com.fif.fpay.android.fsend.fragments.ShipmentDetailDeliveredFragment"
+        android:label="fragment_shipment_delivered_detail"
+        tools:layout="@layout/fragment_shipment_delivered_detail" />
+
     <fragment
         android:id="@+id/shipmentQrFragment"
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentQrFragment"

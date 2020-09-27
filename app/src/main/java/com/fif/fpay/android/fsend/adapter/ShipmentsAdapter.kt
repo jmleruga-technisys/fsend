@@ -63,9 +63,8 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
                 holder.buttonPostpone.visibility = View.VISIBLE
             }
             "RESCHEDULED" -> {
-                holder.state.visibility = View.GONE
-                holder.buttonSelect.visibility = View.VISIBLE
-                holder.buttonSelect.text = context!!.getString(R.string.reschedule)
+                holder.state.text = "Pendiente a reagendar"
+                holder.buttonSelect.visibility = View.GONE
                 holder.buttonPostpone.visibility = View.GONE
             }
             else -> {}
