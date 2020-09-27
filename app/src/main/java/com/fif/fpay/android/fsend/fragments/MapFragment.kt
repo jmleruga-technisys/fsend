@@ -110,18 +110,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        if (!checkPermissions()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions()
-            }
-        }
-        else {
-            getLastLocation()
-        }
-
-       // myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
+        myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
     }
@@ -367,109 +357,6 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
     }
 
 
-
-    private fun getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        if(fusedLocationClient?.lastLocation!!.isComplete){
-            myPosition = (LatLng(fusedLocationClient?.lastLocation!!.result.latitude,fusedLocationClient?.lastLocation!!.result.longitude))
-        }else{
-            myPosition = LatLng(-34.551934, -58.449241)
-        }
-        }
-
-    private fun showMessage(string: String) {
-
-    }
-    private fun showSnackbar(
-        mainTextStringId: String, actionStringId: String,
-        listener: View.OnClickListener
-    ) {
-        Toast.makeText(requireContext(), mainTextStringId, Toast.LENGTH_LONG).show()
-    }
-
-
-    private fun checkPermissions(): Boolean {
-        val permissionState = ActivityCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        return permissionState == PackageManager.PERMISSION_GRANTED
-    }
-    private fun startLocationPermissionRequest() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-            REQUEST_PERMISSIONS_REQUEST_CODE
-        )
-    }
-    private fun requestPermissions() {
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-            requireActivity(),
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.")
-            showSnackbar("Location permission is needed for core functionality", "Okay",
-                View.OnClickListener {
-                    startLocationPermissionRequest()
-                })
-        }
-        else {
-            Log.i(TAG, "Requesting permission")
-            startLocationPermissionRequest()
-        }
-    }
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        Log.i(TAG, "onRequestPermissionResult")
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            when {
-                grantResults.isEmpty() -> {
-                    // If user interaction was interrupted, the permission request is cancelled and you
-                    // receive empty arrays.
-                    Log.i(TAG, "User interaction was cancelled.")
-                }
-                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    // Permission granted.
-                    getLastLocation()
-                }
-                else -> {
-                    showSnackbar("Permission was denied", "Settings",
-                        View.OnClickListener {
-                            // Build intent that displays the App settings screen.
-                            val intent = Intent()
-                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                            val uri = Uri.fromParts(
-                                "package",
-                                Build.DISPLAY, null
-                            )
-                            intent.data = uri
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                        }
-                    )
-                }
-            }
-        }
-    }
 
 
 
