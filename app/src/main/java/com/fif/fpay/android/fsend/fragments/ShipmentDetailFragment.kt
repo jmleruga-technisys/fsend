@@ -1,12 +1,17 @@
 package com.fif.fpay.android.fsend.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
 import com.fif.fpay.android.fsend.R
@@ -21,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 import kotlinx.android.synthetic.main.fragment_shipment_detail.*
-import kotlinx.android.synthetic.main.shipment_qr_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,6 +52,9 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
     private var goToDirection: String = ""
     private var zoom: Float = 16.0f
     private var mapFragment:SupportMapFragment? = null
+
+    val REQUEST_PHONE_CALL = 1
+    var phoneNumber = ""
 
     private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
@@ -85,6 +92,14 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
         initDirection = "Nuestras Malvinas 277,Glew"
         goToDirection = "Aranguren 242,Glew"
 
+        imgCall.setOnClickListener {
+            if(ActivityCompat.checkSelfPermission(this.requireContext(), android.Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(android.Manifest.permission.CALL_PHONE),REQUEST_PHONE_CALL)
+            }else{
+                startCall()
+            }
+        }
+
         val apiServices = RetrofitClient.apiServices(requireContext())
         apiServices.getDirection(initDirection, goToDirection, getString(R.string.api_key))
             .enqueue(object : Callback<DirectionResponses> {
@@ -99,6 +114,15 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
             })
     }
 
+    @SuppressLint("MissingPermission")
+    private fun startCall(){
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1160158121"))
+        startActivity(intent)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
+        if(requestCode == REQUEST_PHONE_CALL)startCall()
+    }
 
     private fun drawPolyline(response: Response<DirectionResponses>) {
         val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
