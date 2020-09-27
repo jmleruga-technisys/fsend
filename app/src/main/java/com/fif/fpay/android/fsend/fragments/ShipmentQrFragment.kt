@@ -59,6 +59,11 @@ class ShipmentQrFragment : BaseFragment(), QRReaderIteract {
                 validQR()
             }
         })
+
+        qrCodigo.setOnClickListener {
+            findNavController().navigate(R.id.action_shipmentQrFragment_to_shipmentInputCodeFragment)
+
+        }
     }
 
 
