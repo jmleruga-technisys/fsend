@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.PolyUtil
+import kotlinx.android.synthetic.main.custominfowindow.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -69,7 +70,8 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
+        myPosition = LatLng(viewModel!!.shipments!![0].clientInfo.address.location.position.latitude.toDouble(),
+            viewModel.shipments!![0].clientInfo.address.location.position.longitude.toDouble()) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
 
@@ -96,9 +98,9 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         initDirection = "Nuestras Malvinas 277,Glew"
         goToDirection = "Aranguren 242,Glew"
 
-       // addMakers()
+        addMakers()
 
-        addInfoMaker()
+        //addInfoMaker()
 
     }
 
@@ -182,39 +184,75 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
 
     fun addMakers(){
-        var uno = LatLng(-34.897568, -58.402854)
-        var dos = LatLng(-34.899152, -58.400891)
-        var tres = LatLng(-34.890424, -58.376778)
-        var cuatro = LatLng(-34.887191, -58.381391)
-        var cinco:LatLng = LatLng(-34.874404, -58.379401)
 
 
-        val mKuno = MarkerOptions()
-            .position(uno)
-            .title("uno")
-            .snippet("")
-        val mKdos = MarkerOptions()
-            .position(dos)
-            .title("uno")
-            .snippet("")
-        val mKtres = MarkerOptions()
-            .position(tres)
-            .title("uno")
-            .snippet("")
-        val mKcuatro = MarkerOptions()
-            .position(cuatro)
-            .title("uno")
-            .snippet("")
-        val mKcinco = MarkerOptions()
-            .position(cinco)
-            .title("uno")
-            .snippet("")
-
-        map.addMarker(mKuno)
-        map.addMarker(mKdos)
-        map.addMarker(mKtres)
-        map.addMarker(mKcuatro)
-        map.addMarker(mKcinco)
+        for (i in viewModel.shipments!!.indices){
+            val m = MarkerOptions()
+                .position(LatLng(viewModel!!.shipments!![i].clientInfo.address.location.position.latitude.toDouble(),
+                    viewModel.shipments!![i].clientInfo.address.location.position.longitude.toDouble()))
+                .title(viewModel!!.shipments!![i].clientInfo.address.fullAddress)
+                .icon(
+            when(viewModel!!.shipments!!.get(i).state) {
+                "IN_PROGRESS" -> {
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                }
+                "DELIVERED" -> {
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                }
+                "REJECTED", "FAILED" -> {
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                }
+                "CREATED" -> {
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                }
+                "RESCHEDULED" -> {
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                }
+                else -> {
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                }
+            }
+                )
+            map.addMarker(m)
+        }
+//        var uno = LatLng(-34.897568, -58.402854)
+//        var dos = LatLng(-34.899152, -58.400891)
+//        var tres = LatLng(-34.890424, -58.376778)
+//        var cuatro = LatLng(-34.887191, -58.381391)
+//        var cinco:LatLng = LatLng(-34.874404, -58.379401)
+//
+//        val mKuno = MarkerOptions()
+//            .position(uno)
+//            .title("uno")
+//            .snippet("")
+//        val mKdos = MarkerOptions()
+//            .position(dos)
+//            .title("uno")
+//            .snippet("")
+//        val mKtres = MarkerOptions()
+//            .position(tres)
+//            .title("uno")
+//            .snippet("")
+//        val mKcuatro = MarkerOptions()
+//            .position(cuatro)
+//            .title("uno")
+//            .snippet("")
+//        val mKcinco = MarkerOptions()
+//            .position(cinco)
+//            .title("uno")
+//            .snippet("")
+//
+//        map.addMarker(mKuno)
+//        map.addMarker(mKdos)
+//        map.addMarker(mKtres)
+//        map.addMarker(mKcuatro)
+//        map.addMarker(mKcinco)
 
 
     }
@@ -261,6 +299,17 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
 
     }
+
+
+    class PlaceDetails(
+        val position: LatLng,
+        val title: String = "Marker",
+        val snippet: String? = null,
+        val icon: BitmapDescriptor = BitmapDescriptorFactory.defaultMarker(),
+        val infoWindowAnchorX: Float = 0.5F,
+        val infoWindowAnchorY: Float = 0F,
+        val draggable: Boolean = false,
+        val zIndex: Float = 0F)
 
 
 

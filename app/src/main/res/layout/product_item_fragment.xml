@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Taladro que taladra"
+        android:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/productImage"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="5 U"
+        android:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

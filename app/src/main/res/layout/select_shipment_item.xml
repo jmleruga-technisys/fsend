@@ -14,7 +14,7 @@
 
             <ImageView
                 android:id="@+id/chevron_select"
-                android:src="@drawable/ic_chevron_24"
+                android:src="@drawable/ic_chevron_arrow_right"
                 android:layout_width="24dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="16dp"
@@ -31,6 +31,7 @@
                 android:textColor="@color/gray80"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
+                android:fontFamily="@font/roboto"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -43,6 +44,7 @@
                 android:textColor="@color/gray40"
                 android:textSize="@dimen/text_size_xs"
                 android:textStyle="bold"
+                android:fontFamily="@font/roboto"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/addressTitle"/>
 
@@ -75,6 +77,7 @@
                 android:textStyle="normal"
                 android:text="@string/on_my_way"
                 android:textSize="@dimen/text_size_xxs"
+                android:fontFamily="@font/roboto"
                 app:layout_constraintTop_toBottomOf="@id/addressSubtitle"
                 app:layout_constraintStart_toStartOf="parent" />
 

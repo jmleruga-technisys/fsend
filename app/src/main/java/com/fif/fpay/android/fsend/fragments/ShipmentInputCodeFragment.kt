@@ -10,6 +10,7 @@ import androidx.navigation.navGraphViewModels
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import kotlinx.android.synthetic.main.shipment_input_code_fragment.*
+import kotlinx.android.synthetic.main.shipment_qr_fragment.*
 
 class ShipmentInputCodeFragment : BaseFragment() {
 
@@ -29,6 +30,11 @@ class ShipmentInputCodeFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        setToolbar(toolbarInputCode)
+        toolbarInputCode?.setNavigationOnClickListener {
+            onBackPressed()
+        }
 
         viewModel.validatedQr.observe(viewLifecycleOwner, Observer { result ->
             result.let {
