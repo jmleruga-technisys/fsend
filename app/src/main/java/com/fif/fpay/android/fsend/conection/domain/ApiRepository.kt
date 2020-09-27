@@ -1,14 +1,12 @@
 package com.fif.fpay.android.fsend.conection.domain
 
-import android.util.Log
-import com.fif.fpay.android.fsend.conection.BaseResponse
 import com.fif.fpay.android.fsend.conection.RestBuilder
+import com.fif.fpay.android.fsend.conection.UpdateStateRequest
 import com.fif.fpay.android.fsend.data.Shipment
 import com.fif.fpay.android.fsend.errors.*
 import com.fif.fpay.android.fsend.service.IApiService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import retrofit2.Response
 
 typealias OnSuccess<T> = (T) -> Unit
 typealias OnFailure = (IError) -> Unit
@@ -20,7 +18,7 @@ interface IApiRepository {
         failure: OnFailure
     )
 
-    suspend fun finalizeOrder(
+    suspend fun updateState(
         id: String,
         shortcode: String,
         state: String,
@@ -66,7 +64,7 @@ class ApiRepository: IApiRepository {
     }
 
 
-    override suspend fun finalizeOrder(
+    override suspend fun updateState(
         id: String,
         shortcode: String,
         state: String,
@@ -75,7 +73,7 @@ class ApiRepository: IApiRepository {
     ) {
         GlobalScope.async {
             try {
-                val result = endpoind.finalizeOrder(id,shortcode,state)
+                val result = endpoind.updateState(id, UpdateStateRequest( shortcode,state))
 
                 if (result.isSuccessful){
                     success(true)

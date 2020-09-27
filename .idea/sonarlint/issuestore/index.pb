@@ -52,10 +52,6 @@ m
 =app/src/main/java/com/fif/fpay/android/fsend/data/Shipment.kt,6/9/6913adf1019cefc4cfea3cca674a56cc68a40e29
 d
 4app/src/main/res/drawable/ic_launcher_foreground.xml,5/8/587f297f0f0eaa1dcf927b2b5f0bc5430fadf54f
-b
-2app/src/main/res/navigation/nav_graph_shipment.xml,1/a/1afa4b338c19e1965f349d256c199521ea6b905b
-R
-"app/src/main/res/values/styles.xml,f/7/f79cc2688e29fcbc286fda14ae07b27c9e83690f
 9
 	README.md,8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 ~
@@ -86,3 +82,9 @@ s
 Capp/src/main/java/com/fif/fpay/android/fsend/service/IApiService.kt,8/2/8269f17a1e91fb4b986c3e0a0f4c2567e0f371b8
 ~
 Napp/src/main/java/com/fif/fpay/android/fsend/conection/domain/ApiRepository.kt,5/c/5c3155445d2b8eee1d4089f88d5a947edf3a2c52
+`
+0app/src/main/res/layout/select_shipment_item.xml,4/e/4e12fdbf5a10f6f89749f5c19bfcd30084535adc
+d
+4app/src/main/res/layout/shipment_succes_fragment.xml,f/f/ff0b9fb3dd50c9f28a5a55249e1eb913de5b7921
+S
+#app/src/main/res/values/strings.xml,d/2/d2281fbb3027de2722081a53408dd77628bf080e

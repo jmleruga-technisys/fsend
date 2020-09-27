@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.core.view.get
+import androidx.core.view.iterator
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -24,6 +27,7 @@ import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.shipment_list_fragment.*
 
 
@@ -55,24 +59,8 @@ class ShipmentListFragment : BaseFragment() {
                     null,
                     null
                 ).show()
-            if (viewModel.shipments != null && viewModel.shipments!!.isNotEmpty()) {
-                shipmentsGroup.visibility = View.VISIBLE
-                shipmentsIndicatorsGroup.visibility = View.VISIBLE
-                noShipmentGroup.visibility = View.GONE
-                checkSentShipments()
-                shipmentRecyclerView.adapter =
-                    ShipmentsAdapter(viewModel.shipments!!, context) { selected ->
-                        selectedShipment = selected
-                        //Voy al detalle findNavController().navigate(R.id.action)
-                    }
-                val itemDecor = DividerItemDecoration(context, VERTICAL)
-                shipmentRecyclerView.addItemDecoration(itemDecor)
-                shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
-            } else {
-                noShipmentGroup.visibility = View.VISIBLE
-                shipmentsIndicatorsGroup.visibility = View.GONE
-                shipmentsGroup.visibility = View.GONE
-            }
+            setShipmentList(viewModel.shipments)
+            checkCurrent()
         }
 
         showLoading()
@@ -87,32 +75,26 @@ class ShipmentListFragment : BaseFragment() {
             findNavController().navigate(R.id.action_shipmentListFragment_to_shipmentInputCodeFragment)
         }
 
-        viewModel.gotShipments.observe(viewLifecycleOwner, Observer {result ->
-            result.getContentIfNotHandled()?.let {shipments ->
-                if (shipments.isNotEmpty()) {
-                    shipmentsGroup.visibility = View.VISIBLE
-                    shipmentsIndicatorsGroup.visibility = View.VISIBLE
-                    noShipmentGroup.visibility = View.GONE
-                    checkSentShipments()
-                    shipmentRecyclerView.adapter =
-                        ShipmentsAdapter(shipments, context) { selected ->
-                            selectedShipment = selected
-                            Toast.makeText(context, selected.clientInfo.name, Toast.LENGTH_SHORT).show()
-                            //Voy al detalle findNavController().navigate(R.id.action)
-                        }
-                    val itemDecor = DividerItemDecoration(context, VERTICAL)
-                    shipmentRecyclerView.addItemDecoration(itemDecor)
-                    shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
-                } else {
-                    noShipmentGroup.visibility = View.VISIBLE
-                    shipmentsIndicatorsGroup.visibility = View.GONE
-                    shipmentsGroup.visibility = View.GONE
-                }
+        viewModel.gotShipments.observe(viewLifecycleOwner, Observer { result ->
+            result.getContentIfNotHandled()?.let { shipments ->
+                setShipmentList(shipments)
+                checkCurrent()
             }
             hideLoading()
         })
 
+        shipmentIndicator.setOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                //Do nothing
+            }
 
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                //Do Nothing
+            }
+        })
+
+        checkCurrent()
     }
 
 
@@ -122,13 +104,91 @@ class ShipmentListFragment : BaseFragment() {
             shipmentIndicator.removeAllTabs()
             it.forEach { shipment ->
                 shipmentIndicator.addTab(shipmentIndicator.newTab())
-                if (shipment.state == "DELIVERED"){
+                if (shipment.state == "DELIVERED") {
                     counter++
-                    shipmentIndicator.getTabAt(shipmentIndicator.size-1)!!.select()
+                    shipmentIndicator.getTabAt(shipmentIndicator.size - 1)!!.select()
                 }
             }
         }
-        sentShipments.text = context?.getString(R.string.sent_shipments, counter, viewModel.shipments!!.size)
+        sentShipments.text =
+            context?.getString(R.string.sent_shipments, counter, viewModel.shipments!!.size)
+    }
 
+    fun checkCurrent() {
+        if (viewModel.currentShipment != null) {
+            for (i in 0 until shipmentRecyclerView.size) {
+                val holder =
+                    shipmentRecyclerView.getChildViewHolder(shipmentIndicator[i]) as ShipmentsAdapter.ViewHolder
+                holder.button.isEnabled = false
+            }
+        } else {
+            for (i in 0 until shipmentRecyclerView.size) {
+                val holder =
+                    shipmentRecyclerView.getChildViewHolder(shipmentIndicator[i]) as ShipmentsAdapter.ViewHolder
+                holder.button.isEnabled = true
+            }
+        }
+    }
+
+    fun setCurrent(shipment: Shipment){
+        showLoading()
+        viewModel.currentShipment = shipment
+        viewModel.updateState("", success = {
+            viewModel.getShipments {
+                hideLoading()
+                CustomAlertDialog(requireActivity())
+                    .setBasicProperties(
+                        "No se pudo actualizar el estado. Intente nuevamente.",
+                        R.string.accept_button,
+                        DialogInterface.OnClickListener { _, _ ->
+                            //Nothing
+                        },
+                        null,
+                        null,
+                        null,
+                        null
+                    ).show()
+            }
+        }, failure = {
+            viewModel.getShipments {
+                hideLoading()
+                CustomAlertDialog(requireActivity())
+                    .setBasicProperties(
+                        "No se pudo actualizar el listado. Intente nuevamente.",
+                        R.string.accept_button,
+                        DialogInterface.OnClickListener { _, _ ->
+                            //Nothing
+                        },
+                        null,
+                        null,
+                        null,
+                        null
+                    ).show()
+            }
+        })
+    }
+
+    fun setShipmentList(list: ArrayList<Shipment>?){
+        if (list != null && list.isNotEmpty()) {
+            shipmentsGroup.visibility = View.VISIBLE
+            shipmentsIndicatorsGroup.visibility = View.VISIBLE
+            noShipmentGroup.visibility = View.GONE
+            checkSentShipments()
+            shipmentRecyclerView.adapter =
+                ShipmentsAdapter(list, context, { selected ->
+                    selectedShipment = selected
+                    val bundle = bundleOf("selected" to Gson().toJson(selectedShipment))
+                    findNavController().navigate(R.id.action_shipmentListFragment_to_shipmentDetailFragment, bundle)
+                }, {
+                    setCurrent(it)
+                })
+            val itemDecor = DividerItemDecoration(context, VERTICAL)
+            shipmentRecyclerView.addItemDecoration(itemDecor)
+            shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
+        } else {
+            noShipmentGroup.visibility = View.VISIBLE
+            shipmentsIndicatorsGroup.visibility = View.GONE
+            shipmentsGroup.visibility = View.GONE
+        }
     }
 }
