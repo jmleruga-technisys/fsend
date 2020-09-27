@@ -1,19 +1,29 @@
 package com.fif.fpay.android.fsend.fragments
 
 import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.fif.fpay.android.fsend.CustomAlertDialog
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.data.DirectionResponses
 import com.fif.fpay.android.fsend.data.Shipment
+import com.fif.fpay.android.fsend.utils.SortPlaces
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.maps.android.PolyUtil
 import kotlinx.android.synthetic.main.custominfowindow.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +43,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,7 +60,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListener{
+class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListener{
 
     private lateinit var map: GoogleMap
     private lateinit var myPosition: LatLng
@@ -58,6 +72,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
     var polyline : PolylineOptions? = null
     var time : String? = null
     var hashMap: HashMap<LatLng, Int>? = HashMap<LatLng,Int>()
+    var shipmentOnlyValids: ArrayList<Shipment> = ArrayList()
     private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
     companion object {
@@ -74,16 +89,23 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        myPosition = LatLng(viewModel!!.shipments!![0].clientInfo.address.location.position.latitude.toDouble(),
-            viewModel.shipments!![0].clientInfo.address.location.position.longitude.toDouble()) //Obtener mi posicion de gps
+        myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
+
 
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap!!
         map.setOnMarkerClickListener(this)
+        val markerMyLocation = MarkerOptions()
+        markerMyLocation.position(myPosition)
+            .title("Mi posición")
+            .icon(vectorToBitmap(
+                R.drawable.ic_delivery, Color.parseColor("#000000")))
+        map.addMarker(markerMyLocation)
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
 
 
@@ -104,7 +126,44 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
 
         addMakers()
 
+
+        imgBestRoute.setOnClickListener {
+            setBestRoute()
+        }
+
+
+
         //addInfoMaker()
+
+    }
+
+    private fun setBestRoute() {
+        Collections.sort(shipmentOnlyValids,  SortPlaces(myPosition))
+        val ltLong = LatLng(shipmentOnlyValids!![0].clientInfo.address.location.position.latitude.toDouble(),
+            shipmentOnlyValids!![0].clientInfo.address.location.position.longitude.toDouble())
+        val markerOptions1 = MarkerOptions()
+        markerOptions1.position(ltLong)
+            .title(shipmentOnlyValids!![0].clientInfo.address.fullAddress)
+            .icon((BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))
+
+           val markerMyLocation = MarkerOptions()
+                markerMyLocation.position(myPosition)
+            .title("Mi posición")
+            .icon(vectorToBitmap(
+                R.drawable.ic_delivery, Color.parseColor("#000000")))
+
+        map.addMarker(markerMyLocation)
+        var marker:Marker = map.addMarker(markerOptions1)
+
+
+        val myPositionString = myPosition.latitude.toString()+","+myPosition.longitude.toString()
+        val markerPositionString = ltLong!!.latitude.toString()+","+ltLong!!.longitude.toString()
+
+        getPolyline(myPositionString,markerPositionString,marker)
+
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
 
     }
 
@@ -171,10 +230,28 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         view?.let {
             Snackbar.make(it, "", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Iniciar entrega") {
-                    val bundle = bundleOf("selected" to Gson().toJson(hashMap!![LatLng(marker!!.position.latitude,marker.position.longitude)]?.let { it1 ->
-                        viewModel.shipments!![it1]
-                    }))
-                    findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment,bundle)
+
+                    var currentExists = viewModel.shipments!!.filter { it.state == "IN_PROGRESS"}.isNotEmpty()
+                    if (!currentExists){
+                        val bundle = bundleOf("selected" to Gson().toJson(hashMap!![LatLng(marker!!.position.latitude,marker.position.longitude)]?.let { it1 ->
+                            viewModel.shipments!![it1]
+                        }))
+                        findNavController().navigate(R.id.action_mapFragment_to_shipmentDetailFragment,bundle)
+                    }else{
+                        CustomAlertDialog(requireActivity())
+                            .setBasicProperties(
+                                "Ya tenes un envio en curso, terminalo para comenzar otro",
+                                R.string.accept_button,
+                                DialogInterface.OnClickListener { _, _ ->
+                                    //Nothing
+                                },
+                                null,
+                                null,
+                                null,
+                                null
+                            ).show()
+                    }
+
                 }
                 .setActionTextColor(getResources().getColor(R.color.sap_green))
                 .show()
@@ -228,6 +305,7 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
                 )
             if (state == "IN_PROGRESS"||state == "CREATED"||state == "PENDING"){
                 map.addMarker(m)
+                shipmentOnlyValids.add(viewModel!!.shipments!![i])
             }
 
             hashMap!![ltLong] = i
@@ -323,6 +401,19 @@ class MapFragment : Fragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListen
         val draggable: Boolean = false,
         val zIndex: Float = 0F)
 
+
+    private fun vectorToBitmap(@DrawableRes id : Int, @ColorInt color : Int): BitmapDescriptor {
+        val vectorDrawable: Drawable = ResourcesCompat.getDrawable(resources, id, null)
+            ?: //Log.e(TAG, "Resource not found")
+            return BitmapDescriptorFactory.defaultMarker()
+        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        DrawableCompat.setTint(vectorDrawable, color)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
 
 
 
