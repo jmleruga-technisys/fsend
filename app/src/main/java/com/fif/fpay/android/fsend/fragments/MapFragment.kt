@@ -121,7 +121,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
             getLastLocation()
         }
 
-        myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
+       // myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
     }
@@ -168,33 +168,43 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
     }
 
     private fun setBestRoute() {
-        Collections.sort(shipmentOnlyValids,  SortPlaces(myPosition))
-        val ltLong = LatLng(shipmentOnlyValids!![0].clientInfo.address.location.position.latitude.toDouble(),
-            shipmentOnlyValids!![0].clientInfo.address.location.position.longitude.toDouble())
-        val markerOptions1 = MarkerOptions()
-        markerOptions1.position(ltLong)
-            .title(shipmentOnlyValids!![0].clientInfo.address.fullAddress)
-            .icon((BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))
+        if(shipmentOnlyValids.isNotEmpty()) {
+            Collections.sort(shipmentOnlyValids, SortPlaces(myPosition))
+            val ltLong = LatLng(
+                shipmentOnlyValids!![0].clientInfo.address.location.position.latitude.toDouble(),
+                shipmentOnlyValids!![0].clientInfo.address.location.position.longitude.toDouble()
+            )
+            val markerOptions1 = MarkerOptions()
+            markerOptions1.position(ltLong)
+                .title(shipmentOnlyValids!![0].clientInfo.address.fullAddress)
+                .icon(
+                    (BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                )
 
-           val markerMyLocation = MarkerOptions()
-                markerMyLocation.position(myPosition)
-            .title("Mi posición")
-            .icon(vectorToBitmap(
-                R.drawable.ic_delivery, Color.parseColor("#000000")))
+            val markerMyLocation = MarkerOptions()
+            markerMyLocation.position(myPosition)
+                .title("Mi posición")
+                .icon(
+                    vectorToBitmap(
+                        R.drawable.ic_delivery, Color.parseColor("#000000")
+                    )
+                )
 
-        map.addMarker(markerMyLocation)
-        var marker:Marker = map.addMarker(markerOptions1)
-
-
-        val myPositionString = myPosition.latitude.toString()+","+myPosition.longitude.toString()
-        val markerPositionString = ltLong!!.latitude.toString()+","+ltLong!!.longitude.toString()
-
-        getPolyline(myPositionString,markerPositionString,marker)
+            map.addMarker(markerMyLocation)
+            var marker: Marker = map.addMarker(markerOptions1)
 
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
+            val myPositionString =
+                myPosition.latitude.toString() + "," + myPosition.longitude.toString()
+            val markerPositionString =
+                ltLong!!.latitude.toString() + "," + ltLong!!.longitude.toString()
 
+            getPolyline(myPositionString, markerPositionString, marker)
+
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
+        }
     }
 
 
@@ -378,6 +388,8 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
         }
         if(fusedLocationClient?.lastLocation!!.isComplete){
             myPosition = (LatLng(fusedLocationClient?.lastLocation!!.result.latitude,fusedLocationClient?.lastLocation!!.result.longitude))
+        }else{
+            myPosition = LatLng(-34.551934, -58.449241)
         }
         }
 

@@ -2,6 +2,8 @@ package com.fif.fpay.android.fsend.fragments
 
 
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -81,33 +83,25 @@ class ShipmentListFragment : BaseFragment() {
             hideLoading()
         })
 
-        shipmentIndicator.setOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                //Do nothing
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                //Do Nothing
-            }
-        })
-
         checkCurrent()
     }
 
 
     fun checkSentShipments() {
         var counter = 0
+            shipmentIndicator.getIndeterminateDrawable()
+            .setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
         viewModel.shipments?.let {
-            shipmentIndicator.removeAllTabs()
+            shipmentIndicator.progress = 0
+            shipmentIndicator.max = it.size -1
             it.forEach { shipment ->
-                shipmentIndicator.addTab(shipmentIndicator.newTab())
                 if (shipment.state == "DELIVERED") {
                     counter++
-                    shipmentIndicator.getTabAt(shipmentIndicator.size - 1)!!.select()
                 }
             }
+
         }
+        shipmentIndicator.progress =counter
         sentShipments.text =
             context?.getString(R.string.sent_shipments, counter, viewModel.shipments!!.size)
     }
