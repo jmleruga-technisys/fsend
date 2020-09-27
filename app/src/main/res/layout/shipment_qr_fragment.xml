@@ -62,13 +62,14 @@
             android:clickable="true"
             android:gravity="center"
             android:text="O ingresa el código de pago"
+            android:layout_marginBottom="16dp"
             android:textColor="@color/gray2"
             android:textSize="@dimen/text_size_l"
             android:fontFamily="@font/roboto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/qrTitle" />
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout

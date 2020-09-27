@@ -86,7 +86,6 @@ class ShipmentDetailDeliveredFragment : BaseFragment(), OnMapReadyCallback {
         }
         textDirection?.text = infoShipment.clientInfo.address.fullAddress
         textAdditionalInfo?.text = infoShipment.clientInfo.address.additionalInfo
-        textUserName?.text = infoShipment.clientInfo.name
 
         buttonPaymentDetail?.setOnClickListener{
             findNavController().navigate(R.id.action_shipmentDetailFragment_to_shipmentQrFragment)

@@ -8,6 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="8dp"
         android:background="@null"
         app:elevation="0dp">
 
@@ -32,6 +33,14 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <fragment
             android:id="@+id/maps_view"
@@ -41,13 +50,14 @@
             app:layout_constraintBottom_toTopOf="@+id/buttonPaymentDetail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rl"
             tools:context=".kotlin.MainActivity" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             app:layout_constraintTop_toBottomOf="@+id/maps_view"
             android:visibility="invisible"
             >
@@ -97,6 +107,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="Entregar"
             android:fontFamily="@font/roboto"
             app:layout_constraintBottom_toTopOf="@+id/textViweNotShip"
@@ -104,14 +116,14 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="20dp"
             android:id="@+id/textViweNotShip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="No pude entregar"
             android:textColor="@color/color_main_red"
-            android:textSize="20dp"
+            android:textSize="@dimen/text_size_s"
             android:fontFamily="@font/roboto"
             app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -139,11 +151,11 @@
 
         <FrameLayout
             android:id="@+id/menuIndicator"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:paddingStart="16dp"
-            android:paddingTop="48dp"
+            android:paddingTop="56dp"
             android:paddingEnd="16dp"
             android:paddingBottom="8dp"
             android:translationZ="1dp"
@@ -152,8 +164,8 @@
             app:layout_constraintTop_toBottomOf="@id/menu">
 
             <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_chevron_arrow_back"
                 tools:ignore="UselessParent" />
@@ -205,27 +217,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textDirection" />
 
-                <TextView
-                    android:id="@+id/textUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Nombre"
-                    android:textColor="@color/extra_white"
-                    android:textSize="18dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textAdditionalInfo" />
-
                 <ImageView
-                    android:id="@+id/imgCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/ic_call_24px"
-                    android:clickable="true"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
-                    app:layout_constraintTop_toBottomOf="@+id/imgInfo" />
+                android:id="@+id/imgCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_call_24px"
+                app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reciclerProducts"

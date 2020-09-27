@@ -62,8 +62,6 @@ x
 Happ/src/main/java/com/fif/fpay/android/fsend/adapter/ShipmentsAdapter.kt,a/9/a9f0f4844f6824219b50fe3bf04159fb8a4c2779
 €
 Papp/src/main/java/com/fif/fpay/android/fsend/fragments/ShipmentDetailFragment.kt,f/0/f0c0daa4c366b156eddee1f683ea4b0158ab5260
-[
-+app/src/main/res/drawable/custom_ripple.xml,a/3/a35ed967ca9cd79c363a493e5a4a315ecaea0f37
 `
 0app/src/main/res/drawable/tab_pager_selector.xml,1/9/19f23b5ea39976d8b923574a6be08d06750bf37d
 m
@@ -80,7 +78,5 @@ s
 Capp/src/main/java/com/fif/fpay/android/fsend/service/IApiService.kt,8/2/8269f17a1e91fb4b986c3e0a0f4c2567e0f371b8
 ~
 Napp/src/main/java/com/fif/fpay/android/fsend/conection/domain/ApiRepository.kt,5/c/5c3155445d2b8eee1d4089f88d5a947edf3a2c52
-d
-4app/src/main/res/layout/shipment_succes_fragment.xml,f/f/ff0b9fb3dd50c9f28a5a55249e1eb913de5b7921
 S
 #app/src/main/res/values/strings.xml,d/2/d2281fbb3027de2722081a53408dd77628bf080e

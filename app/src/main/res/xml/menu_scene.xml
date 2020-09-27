@@ -12,7 +12,12 @@
                 motion:layout_constraintStart_toStartOf="parent" />
         </Constraint>
 
-        <Constraint android:id="@id/menuIndicator">
+        <Constraint android:id="@id/menuIndicator"
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@id/menu">
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

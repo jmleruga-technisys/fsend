@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Toro Mapuche"
+            android:visibility="invisible"
             android:textColor="@color/extra_white"
             android:textSize="18dp"
             android:fontFamily="@font/roboto"
@@ -61,22 +62,11 @@
             android:id="@+id/imgCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/ic_call_24px"
             app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
-            app:layout_constraintTop_toBottomOf="@+id/imgInfo" />
-
-
-        <ImageView
-            android:id="@+id/imgInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/ic_info_24px"
-            app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout2" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
         <androidx.recyclerview.widget.RecyclerView
