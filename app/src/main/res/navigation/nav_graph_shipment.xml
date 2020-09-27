@@ -23,7 +23,6 @@
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentDetailFragment"
         android:label="fragment_shipment_detail"
         tools:layout="@layout/fragment_shipment_detail" >
-
         <action
             android:id="@+id/action_shipmentDetailFragment_to_shipmentQrFragment"
             app:destination="@id/shipmentQrFragment" />
@@ -33,6 +32,11 @@
         android:name="com.fif.fpay.android.fsend.fragments.ShipmentQrFragment"
         android:label="shipment_qr_fragment"
         tools:layout="@layout/shipment_qr_fragment" >
+        <argument
+            android:name="selected"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_shipmentQrFragment_to_shipmentSuccesFragment"
             app:destination="@id/shipmentSuccesFragment" />
@@ -92,11 +96,5 @@
         android:name="com.fif.fpay.android.fsend.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
-    <fragment
-        android:id="@+id/dashboard"
-        android:name="com.fif.fpay.android.fsend.Dashboard"
-        android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
 
 </navigation>

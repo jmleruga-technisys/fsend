@@ -11,12 +11,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.data.DirectionResponses
+import com.fif.fpay.android.fsend.data.Shipment
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.gson.Gson
 import com.google.maps.android.PolyUtil
 import kotlinx.android.synthetic.main.fragment_shipment_detail.*
 import retrofit2.Call
@@ -55,8 +58,8 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
     private var mapFragment:SupportMapFragment? = null
 
     val REQUEST_PHONE_CALL = 1
-    var phoneNumber = ""
-
+    lateinit var infoShipment: Shipment
+    
     private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
     companion object {
@@ -79,10 +82,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
             onBackPressed()
         }
 
-       requireArguments().get("selected").let {
-           Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
-
-       }
+        infoShipment = Gson().fromJson(arguments?.getString("selected"), Shipment::class.java)
 
         myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
@@ -121,7 +121,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun startCall(){
-        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1160158121"))
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + infoShipment!!.clientInfo.phone))
         startActivity(intent)
     }
 
