@@ -39,7 +39,6 @@ class ShipmentViewModel : ViewModel() {
 
 
     init {
-        //mockShipments()
 
         gotShipments = Transformations.map(clientShipmentLiveData) { response ->
             when(response.status) {
@@ -107,13 +106,16 @@ class ShipmentViewModel : ViewModel() {
     }
 
     fun setInProgress(shipment: Shipment, failure: OnFailure){
-        updateState(shipment, "",
-        success = {
-            inProgressLiveData.postValue(Resource.success(it))
-        },
-        failure ={
-            failure.invoke(it)
-        })
+        if (currentShipment == null){
+            shipment.state = "IN_PROGRESS"
+            updateState(shipment, "",
+            success = {
+                inProgressLiveData.postValue(Resource.success(it))
+            },
+            failure ={
+                failure.invoke(it)
+            })
+        }
     }
 
 
