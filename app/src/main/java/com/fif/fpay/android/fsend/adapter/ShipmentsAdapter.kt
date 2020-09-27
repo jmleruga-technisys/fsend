@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.fif.fpay.android.fsend.R
@@ -15,7 +13,7 @@ import com.fif.fpay.android.fsend.data.Shipment
 
 class ShipmentsAdapter(offersListIn: List<Shipment>,
                        ctx: Context?,
-                       val selectedCardCallback: ((Shipment) -> Unit)?, val selectedButtonCallback: ((Shipment) -> Unit)?) : RecyclerView.Adapter<ShipmentsAdapter.ViewHolder>() {
+                       val selectedCardCallback: ((Shipment) -> Unit)?, val selectedButtonCallback: ((Shipment) -> Unit)?, val postponeButtonCallback: ((Shipment) -> Unit)?, val currentExists: Boolean) : RecyclerView.Adapter<ShipmentsAdapter.ViewHolder>() {
 
 
 
@@ -39,7 +37,8 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
         when(shipment.state){
             "IN_PROGRESS" -> {
                 holder.state.text = "En entrega"
-                holder.button.visibility = View.GONE
+                holder.buttonSelect.visibility = View.GONE
+                holder.buttonPostpone.visibility = View.GONE
                 holder.state.setTextColor(context!!.getColor(R.color.logo_main_light_blue))
             }
             "DELIVERED" -> {
@@ -49,24 +48,36 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
                 holder.state.setTextColor(context.getColor(R.color.extra_white))
                 holder.card.setBackgroundColor(context!!.getColor(R.color.color_main_green))
                 holder.card.alpha = 0.3F
-                holder.button.visibility = View.GONE
+                holder.buttonSelect.visibility = View.GONE
+                holder.buttonPostpone.visibility = View.GONE
             }
             "REJECTED", "FAILED" -> {
                 holder.state.text = "Entrega fallida"
-                holder.button.visibility = View.GONE
+                holder.buttonSelect.visibility = View.GONE
+                holder.buttonPostpone.visibility = View.GONE
                 holder.state.setTextColor(context!!.getColor(R.color.color_main_red))
             }
-            "CREATED" -> {
+            "CREATED", "PENDING" -> {
                 holder.state.visibility = View.GONE
-                holder.button.visibility = View.VISIBLE
+                holder.buttonSelect.visibility = View.VISIBLE
+                holder.buttonPostpone.visibility = View.VISIBLE
             }
             "RESCHEDULED" -> {
                 holder.state.visibility = View.GONE
-                holder.button.visibility = View.VISIBLE
-                holder.button.text = context!!.getString(R.string.reschedule)
+                holder.buttonSelect.visibility = View.VISIBLE
+                holder.buttonSelect.text = context!!.getString(R.string.reschedule)
+                holder.buttonPostpone.visibility = View.GONE
             }
             else -> {}
         }
+
+        if(currentExists)
+            holder.buttonSelect.isEnabled = false
+            holder.buttonPostpone.isEnabled = false
+            holder.buttonSelect.setTextColor(context!!.getColor(R.color.extra_white))
+            holder.buttonPostpone.setTextColor(context!!.getColor(R.color.extra_white))
+            holder.buttonSelect.setBackgroundColor(context.getColor(R.color.gray20))
+            holder.buttonPostpone.setBackgroundColor(context.getColor(R.color.gray20))
 
     }
 
@@ -78,7 +89,8 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
         var addressTitle: TextView = view.findViewById<View>(R.id.addressTitle) as TextView
         var addressSubtitle: TextView = view.findViewById<View>(R.id.addressSubtitle) as TextView
         var state: TextView = view.findViewById<View>(R.id.shipmentState) as TextView
-        var button: TextView = view.findViewById<View>(R.id.buttonSelectShipment) as TextView
+        var buttonSelect: TextView = view.findViewById<View>(R.id.buttonSelectShipment) as TextView
+        var buttonPostpone: TextView = view.findViewById<View>(R.id.buttonPostpone) as TextView
         var chevron: ImageView = view.findViewById<ImageView>(R.id.chevron_select) as ImageView
         var card: ConstraintLayout = view.findViewById<View>(R.id.cardView) as ConstraintLayout
         var shipment: Shipment? = null
@@ -99,7 +111,16 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
                     notifyDataSetChanged()
                     selectedButtonCallback.invoke(shipmentList[lastSelectedPosition])
                 }
-                button.setOnClickListener(onClick)
+                buttonSelect.setOnClickListener(onClick)
+            }
+
+            if(postponeButtonCallback != null){
+                val onClick: (View) -> Unit = {
+                    lastSelectedPosition = adapterPosition
+                    notifyDataSetChanged()
+                    postponeButtonCallback.invoke(shipmentList[lastSelectedPosition])
+                }
+                buttonPostpone.setOnClickListener(onClick)
             }
         }
     }

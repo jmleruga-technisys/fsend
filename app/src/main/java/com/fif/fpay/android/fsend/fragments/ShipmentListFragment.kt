@@ -28,6 +28,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.select_shipment_item.*
 import kotlinx.android.synthetic.main.shipment_list_fragment.*
 
 
@@ -111,25 +112,17 @@ class ShipmentListFragment : BaseFragment() {
     }
 
     fun checkCurrent() {
-        if (viewModel.currentShipment != null) {
-            for (i in 0 until shipmentRecyclerView.size) {
-                val holder =
-                    shipmentRecyclerView.getChildViewHolder(shipmentIndicator[i]) as ShipmentsAdapter.ViewHolder
-                holder.button.isEnabled = false
-            }
-        } else {
-            for (i in 0 until shipmentRecyclerView.size) {
-                val holder =
-                    shipmentRecyclerView.getChildViewHolder(shipmentIndicator[i]) as ShipmentsAdapter.ViewHolder
-                holder.button.isEnabled = true
-            }
+        viewModel.shipments?.let {
+            val current = it.first { it.state == "IN_PROGRESS" }
+            viewModel.currentShipment = current
         }
     }
 
     fun setCurrent(shipment: Shipment){
         showLoading()
+        shipment.state = "IN_PROGRESS"
         viewModel.currentShipment = shipment
-        viewModel.updateState("", success = {
+        viewModel.updateState(shipment, "", success = {
             viewModel.getShipments {
                 hideLoading()
                 CustomAlertDialog(requireActivity())
@@ -166,6 +159,7 @@ class ShipmentListFragment : BaseFragment() {
 
     fun setShipmentList(list: ArrayList<Shipment>?){
         if (list != null && list.isNotEmpty()) {
+            var currentExists = list.filter { it.state == "IN_PROGRESS"}.isNotEmpty()
             shipmentsGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.VISIBLE
             noShipmentGroup.visibility = View.GONE
@@ -177,14 +171,60 @@ class ShipmentListFragment : BaseFragment() {
                     findNavController().navigate(R.id.action_shipmentListFragment_to_shipmentDetailFragment, bundle)
                 }, {
                     setCurrent(it)
-                })
+                }, {
+                    postponeShipment(it)
+                },
+                currentExists)
             val itemDecor = DividerItemDecoration(context, VERTICAL)
             shipmentRecyclerView.addItemDecoration(itemDecor)
             shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+            var current = list.filter { it.state == "IN_PROGRESS" }
+            if(!current.isNullOrEmpty()){
+                viewModel.currentShipment = current[0]
+            }
         } else {
             noShipmentGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.GONE
             shipmentsGroup.visibility = View.GONE
         }
+
+    }
+
+    fun postponeShipment(shipment: Shipment){
+        shipment.state = "RESCHEDULED"
+        viewModel.updateState(shipment, "", success = {
+            viewModel.getShipments {
+                hideLoading()
+                CustomAlertDialog(requireActivity())
+                    .setBasicProperties(
+                        "No se pudo actualizar el estado. Intente nuevamente.",
+                        R.string.accept_button,
+                        DialogInterface.OnClickListener { _, _ ->
+                            //Nothing
+                        },
+                        null,
+                        null,
+                        null,
+                        null
+                    ).show()
+            }
+        }, failure = {
+            viewModel.getShipments {
+                hideLoading()
+                CustomAlertDialog(requireActivity())
+                    .setBasicProperties(
+                        "No se pudo actualizar el listado. Intente nuevamente.",
+                        R.string.accept_button,
+                        DialogInterface.OnClickListener { _, _ ->
+                            //Nothing
+                        },
+                        null,
+                        null,
+                        null,
+                        null
+                    ).show()
+            }
+        })
     }
 }

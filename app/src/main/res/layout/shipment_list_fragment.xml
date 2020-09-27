@@ -97,6 +97,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shipmentRecyclerView"
         android:layout_width="match_parent"
@@ -116,7 +122,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:constraint_referenced_ids="shipmentRecyclerView"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

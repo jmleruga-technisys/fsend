@@ -62,5 +62,6 @@
     <!-- P2P -->
     <string name="friendlyMessage_error_no_permissions">No se tienen permisos de lectura para los contactos</string>
     <string name="friendlyMessage_error_no_contacts">No se encontraron contactos en el dispositivo</string>
+    <string name="postpone">POSPONER</string>
 
 </resources>
