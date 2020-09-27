@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import java.lang.Exception
 
 class CustomAlertDialog(activity: Activity) : AlertDialog(activity) {
     private var mActivity = activity
@@ -22,20 +23,23 @@ class CustomAlertDialog(activity: Activity) : AlertDialog(activity) {
 
         val icon = generalServiceError.findViewById<ImageView>(R.id.error_icon)
         icon.setImageResource(R.drawable.ic_error)
-
-        return mActivity.let {
-            val builder = Builder(mActivity)
-            builder.setView(generalServiceError)
-            positive?.let {
-                builder.setPositiveButton(positive, positiveListener)
+        try {
+            return mActivity.let {
+                val builder = Builder(mActivity)
+                builder.setView(generalServiceError)
+                positive?.let {
+                    builder.setPositiveButton(positive, positiveListener)
+                }
+                negative?.let {
+                    builder.setNegativeButton(negative, negativeListener)
+                }
+                neutral?.let {
+                    builder.setNeutralButton(neutral, neutralListener)
+                }
+                builder.create()
             }
-            negative?.let {
-                builder.setNegativeButton(negative, negativeListener)
-            }
-            neutral?.let {
-                builder.setNeutralButton(neutral, neutralListener)
-            }
-            builder.create()
+        } catch (e: Exception) {
+            return Builder(mActivity).create()
         }
     }
 }

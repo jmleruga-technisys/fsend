@@ -65,96 +65,6 @@ class ShipmentViewModel : ViewModel() {
 
     }
 
-    fun mockShipments() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            shipments = arrayListOf(
-                Shipment(
-                    arrayListOf(
-                        Product("Cerveza", 20.0, "Unidades", "Imaging")
-                    ),
-                    ClientInfo(
-                        "Maxi de Glew",
-                        "220294020",
-                        Address(
-                            Location(Position("-34.2", "32.1")), "Aranguren 242, Glew", "Casa blanca"
-                        ),
-                        TimeRange(
-                            "",
-                            ""
-                        )
-                    ),
-                    "DELIVERED",
-                    "1",
-                    "1",
-                    "1"
-                ),
-                Shipment(
-                    arrayListOf(
-                        Product("Vino", 2.0, "Unidades", ""),
-                        Product("Fernet", 1.0, "Litro", "")
-                    ),
-                    ClientInfo(
-                        "Tarry Pollo",
-                        "220294020",
-                        Address(
-                            Location(Position("-34.2", "32.1")), "Nuestras Malvinas 277, Glew", "Casa blanca"
-                        ),
-                        TimeRange(
-                            "",
-                            ""
-                        )
-                    ),
-                    "FAILED",
-                    "1",
-                    "1",
-                    "1"
-                ),
-                Shipment(
-                    arrayListOf(
-                        Product("Desodorantes", 2.0, "Unidades", ""),
-                        Product("Explosivos", 30.0, "Kilos", "")
-                    ),
-                    ClientInfo(
-                        "Juanito",
-                        "+5492216057065",
-                        Address(
-                            Location(Position("-34.2", "32.1")), "Calle 10 1077, Glew", "depto 4D"
-                        ),
-                        TimeRange(
-                            "",
-                            ""
-                        )
-                    ),
-                    "CREATED",
-                    "1",
-                    "1",
-                "1"
-                ),
-                Shipment(
-                    arrayListOf(
-                        Product("Vino", 2.0, "Unidades", ""),
-                        Product("Fernet", 1.0, "Litro", "")
-                    ),
-                    ClientInfo(
-                        "Tarry Pollo",
-                        "220294020",
-                        Address(
-                            Location(Position("-34.2", "32.1")), "Nuestras Malvinas 277, Glew", "Casa blanca"
-                        ),
-                        TimeRange(
-                            "",
-                            ""
-                        )
-                    ),
-                    "IN_PROGRESS",
-                    "1",
-                    "1",
-                    "1"
-                )
-            )
-        }
-    }
-
     fun getShipments(failure: OnFailure) {
         GlobalScope.async {
             repository.getOrders(userId,
@@ -168,19 +78,18 @@ class ShipmentViewModel : ViewModel() {
                 failure.invoke(it)
             })
         }
-        //success.invoke(mockPaymentInfo())
     }
 
     fun setFinalize(shortcode: String, failure: OnFailure){
-        this.updateState(shortcode,
+        this.updateState(currentShipment!!, shortcode,
         success = {
             qrLiveData.postValue(Resource.success(true))
         },
         failure = failure)
     }
 
-    fun setInProgress(failure: OnFailure){
-        updateState("",
+    fun setInProgress(shipment: Shipment, failure: OnFailure){
+        updateState(shipment, "",
         success = {
             inProgressLiveData.postValue(Resource.success(it))
         },
@@ -190,10 +99,10 @@ class ShipmentViewModel : ViewModel() {
     }
 
 
-    fun updateState(shortcode: String, success: OnSuccess<Boolean>, failure: OnFailure) {
+    fun updateState(shipment: Shipment, shortcode: String, success: OnSuccess<Boolean>, failure: OnFailure) {
         try {
             GlobalScope.async {
-                repository.updateState(currentShipment!!.id, shortcode, currentShipment!!.state,
+                repository.updateState(shipment.id, shortcode, shipment.state,
                     success = {
                         success.invoke(it)
                     },
