@@ -45,13 +45,13 @@ class ShipmentInputCodeFragment : BaseFragment() {
 
         cmdInputAceptar.setOnClickListener {
             viewModel.setFinalize(inputTextCodigo.editText?.text.toString()){
-                findNavController().navigate(R.id.action_shipmentQrFragment_to_shipmentErrorFragment)
+                findNavController().navigate(R.id.action_shipmentInputCodeFragment_to_shipmentErrorFragment)
             }
         }
     }
 
     fun validQR(){
-        findNavController().navigate(R.id.action_shipmentQrFragment_to_shipmentSuccesFragment)
+        findNavController().navigate(R.id.action_shipmentInputCodeFragment_to_shipmentSuccesFragment)
     }
     
     

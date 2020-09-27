@@ -81,7 +81,9 @@ class ShipmentViewModel : ViewModel() {
     }
 
     fun setFinalize(shortcode: String, failure: OnFailure){
-        this.updateState(currentShipment!!, shortcode,
+        var shipment = currentShipment!!
+        shipment.state = "DELIVERED"
+        this.updateState(shipment, shortcode,
         success = {
             qrLiveData.postValue(Resource.success(true))
         },

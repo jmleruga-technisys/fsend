@@ -71,13 +71,14 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
             else -> {}
         }
 
-        if(currentExists)
+        if(currentExists){
             holder.buttonSelect.isEnabled = false
             holder.buttonPostpone.isEnabled = false
             holder.buttonSelect.setTextColor(context!!.getColor(R.color.extra_white))
             holder.buttonPostpone.setTextColor(context!!.getColor(R.color.extra_white))
             holder.buttonSelect.setBackgroundColor(context.getColor(R.color.gray20))
             holder.buttonPostpone.setBackgroundColor(context.getColor(R.color.gray20))
+        }
 
     }
 

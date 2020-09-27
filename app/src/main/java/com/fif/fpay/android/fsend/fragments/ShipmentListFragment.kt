@@ -30,6 +30,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.select_shipment_item.*
 import kotlinx.android.synthetic.main.shipment_list_fragment.*
+import java.lang.Exception
 
 
 class ShipmentListFragment : BaseFragment() {
@@ -113,15 +114,19 @@ class ShipmentListFragment : BaseFragment() {
 
     fun checkCurrent() {
         viewModel.shipments?.let {
-            val current = it.first { it.state == "IN_PROGRESS" }
-            viewModel.currentShipment = current
+            try {
+                val current = it.first { it.state == "IN_PROGRESS" }
+                viewModel.currentShipment = current
+            }catch (e: Exception){
+                viewModel.currentShipment = null
+            }
         }
     }
 
     fun setCurrent(shipment: Shipment){
         showLoading()
-        shipment.state = "IN_PROGRESS"
         viewModel.currentShipment = shipment
+        shipment.state = "IN_PROGRESS"
         viewModel.updateState(shipment, "", success = {
             viewModel.getShipments {
                 hideLoading()
@@ -174,14 +179,15 @@ class ShipmentListFragment : BaseFragment() {
                 }, {
                     postponeShipment(it)
                 },
-                currentExists)
+                    currentExists)
             val itemDecor = DividerItemDecoration(context, VERTICAL)
             shipmentRecyclerView.addItemDecoration(itemDecor)
             shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
-
-            var current = list.filter { it.state == "IN_PROGRESS" }
-            if(!current.isNullOrEmpty()){
-                viewModel.currentShipment = current[0]
+            try {
+                val current = list.first { it.state == "IN_PROGRESS" }
+                viewModel.currentShipment = current
+            }catch (e: Exception){
+                viewModel.currentShipment = null
             }
         } else {
             noShipmentGroup.visibility = View.VISIBLE
