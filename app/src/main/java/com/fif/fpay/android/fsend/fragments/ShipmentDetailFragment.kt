@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
@@ -78,6 +79,10 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
             onBackPressed()
         }
 
+       requireArguments().get("selected").let {
+           Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+
+       }
 
         myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
