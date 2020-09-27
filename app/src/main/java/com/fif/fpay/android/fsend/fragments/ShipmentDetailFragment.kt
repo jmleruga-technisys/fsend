@@ -97,6 +97,17 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
+
+        Thread(Runnable { kotlin.run {
+            while(true)
+            {
+                Thread.sleep(10000)
+
+                Toast.makeText(requireActivity(), "pasaron 10 seg", Toast.LENGTH_SHORT).show()
+                //REST OF CODE HERE//
+            }
+        } }).start()
+
         map = googleMap!!
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15.6f))
 

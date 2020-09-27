@@ -1,18 +1,29 @@
 package com.fif.fpay.android.fsend.fragments
 
+import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.location.Location
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.bundleOf
@@ -25,12 +36,15 @@ import com.fif.fpay.android.fsend.data.DirectionResponses
 import com.fif.fpay.android.fsend.data.Shipment
 import com.fif.fpay.android.fsend.utils.SortPlaces
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.maps.android.PolyUtil
@@ -62,6 +76,12 @@ private const val ARG_PARAM2 = "param2"
  */
 class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickListener{
 
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private var lastLocation: Location? = null
+    private var latitudeLabel: String? = null
+    private var longitudeLabel: String? = null
+    private val TAG = "LocationProvider"
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     private lateinit var map: GoogleMap
     private lateinit var myPosition: LatLng
     private var mPolyline : Polyline? = null
@@ -89,11 +109,21 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        if (!checkPermissions()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions()
+            }
+        }
+        else {
+            getLastLocation()
+        }
+
         myPosition = LatLng(-34.551934, -58.449241) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
         mapFragment!!.getMapAsync(this)
-
-
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -311,96 +341,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
             hashMap!![ltLong] = i
 
         }
-//        var uno = LatLng(-34.897568, -58.402854)
-//        var dos = LatLng(-34.899152, -58.400891)
-//        var tres = LatLng(-34.890424, -58.376778)
-//        var cuatro = LatLng(-34.887191, -58.381391)
-//        var cinco:LatLng = LatLng(-34.874404, -58.379401)
-//
-//        val mKuno = MarkerOptions()
-//            .position(uno)
-//            .title("uno")
-//            .snippet("")
-//        val mKdos = MarkerOptions()
-//            .position(dos)
-//            .title("uno")
-//            .snippet("")
-//        val mKtres = MarkerOptions()
-//            .position(tres)
-//            .title("uno")
-//            .snippet("")
-//        val mKcuatro = MarkerOptions()
-//            .position(cuatro)
-//            .title("uno")
-//            .snippet("")
-//        val mKcinco = MarkerOptions()
-//            .position(cinco)
-//            .title("uno")
-//            .snippet("")
-//
-//        map.addMarker(mKuno)
-//        map.addMarker(mKdos)
-//        map.addMarker(mKtres)
-//        map.addMarker(mKcuatro)
-//        map.addMarker(mKcinco)
-
-
     }
-
-    fun addInfoMaker(){
-
-        var uno = LatLng(-34.897568, -58.402854)
-        var dos = LatLng(-34.899152, -58.400891)
-        var tres = LatLng(-34.890424, -58.376778)
-        var cuatro = LatLng(-34.887191, -58.381391)
-        var cinco:LatLng = LatLng(-34.874404, -58.379401)
-
-
-        val markerOptions1 = MarkerOptions()
-        markerOptions1.position(uno)
-            .title("Snowqualmie Falls")
-            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-
-        val markerOptions2 = MarkerOptions()
-        markerOptions2.position(dos)
-            .title("Snowqualmie Falls")
-            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-
-        val markerOptions3 = MarkerOptions()
-        markerOptions3.position(tres)
-            .title("Snowqualmie Falls")
-            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-
-        val markerOptions4 = MarkerOptions()
-        markerOptions4.position(cuatro)
-            .title("Snowqualmie Falls")
-            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-
-        val markerOptions5 = MarkerOptions()
-        markerOptions5.position(cinco)
-            .title("Snowqualmie Falls")
-            .snippet("Snoqualmie Falls is located 25 miles east of Seattle.")
-
-        val m1: Marker = map.addMarker(markerOptions1)
-        val m2: Marker = map.addMarker(markerOptions2)
-        val m3: Marker = map.addMarker(markerOptions3)
-        val m4: Marker = map.addMarker(markerOptions4)
-        val m5: Marker = map.addMarker(markerOptions5)
-
-
-    }
-
-
-    class PlaceDetails(
-        val position: LatLng,
-        val title: String = "Marker",
-        val snippet: String? = null,
-        val icon: BitmapDescriptor = BitmapDescriptorFactory.defaultMarker(),
-        val infoWindowAnchorX: Float = 0.5F,
-        val infoWindowAnchorY: Float = 0F,
-        val draggable: Boolean = false,
-        val zIndex: Float = 0F)
-
 
     private fun vectorToBitmap(@DrawableRes id : Int, @ColorInt color : Int): BitmapDescriptor {
         val vectorDrawable: Drawable = ResourcesCompat.getDrawable(resources, id, null)
@@ -413,6 +354,109 @@ class MapFragment : BaseFragment(), OnMapReadyCallback,GoogleMap.OnMarkerClickLi
         DrawableCompat.setTint(vectorDrawable, color)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+
+
+    private fun getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        if(fusedLocationClient?.lastLocation!!.isComplete){
+            myPosition = (LatLng(fusedLocationClient?.lastLocation!!.result.latitude,fusedLocationClient?.lastLocation!!.result.longitude))
+        }
+        }
+
+    private fun showMessage(string: String) {
+
+    }
+    private fun showSnackbar(
+        mainTextStringId: String, actionStringId: String,
+        listener: View.OnClickListener
+    ) {
+        Toast.makeText(requireContext(), mainTextStringId, Toast.LENGTH_LONG).show()
+    }
+
+
+    private fun checkPermissions(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        return permissionState == PackageManager.PERMISSION_GRANTED
+    }
+    private fun startLocationPermissionRequest() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            REQUEST_PERMISSIONS_REQUEST_CODE
+        )
+    }
+    private fun requestPermissions() {
+        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.")
+            showSnackbar("Location permission is needed for core functionality", "Okay",
+                View.OnClickListener {
+                    startLocationPermissionRequest()
+                })
+        }
+        else {
+            Log.i(TAG, "Requesting permission")
+            startLocationPermissionRequest()
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        Log.i(TAG, "onRequestPermissionResult")
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            when {
+                grantResults.isEmpty() -> {
+                    // If user interaction was interrupted, the permission request is cancelled and you
+                    // receive empty arrays.
+                    Log.i(TAG, "User interaction was cancelled.")
+                }
+                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission granted.
+                    getLastLocation()
+                }
+                else -> {
+                    showSnackbar("Permission was denied", "Settings",
+                        View.OnClickListener {
+                            // Build intent that displays the App settings screen.
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            val uri = Uri.fromParts(
+                                "package",
+                                Build.DISPLAY, null
+                            )
+                            intent.data = uri
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                    )
+                }
+            }
+        }
     }
 
 
