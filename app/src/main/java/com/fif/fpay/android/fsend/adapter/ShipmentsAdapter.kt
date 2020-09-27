@@ -15,7 +15,7 @@ import com.fif.fpay.android.fsend.data.Shipment
 
 class ShipmentsAdapter(offersListIn: List<Shipment>,
                        ctx: Context?,
-                       val selectedCardCallback: ((Shipment) -> Unit)?, val selectedButtonCallback: ((Shipment) -> Unit)?) : RecyclerView.Adapter<ShipmentsAdapter.ViewHolder>() {
+                       val selectedCardCallback: ((Shipment) -> Unit)?, val selectedButtonCallback: ((Shipment) -> Unit)?, val currentExists: Boolean) : RecyclerView.Adapter<ShipmentsAdapter.ViewHolder>() {
 
 
 
@@ -67,6 +67,11 @@ class ShipmentsAdapter(offersListIn: List<Shipment>,
             }
             else -> {}
         }
+
+        if(currentExists)
+            holder.button.isEnabled = false
+            holder.button.setTextColor(context!!.getColor(R.color.extra_white))
+            holder.button.setBackgroundColor(context!!.getColor(R.color.gray10))
 
     }
 

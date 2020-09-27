@@ -28,6 +28,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.select_shipment_item.*
 import kotlinx.android.synthetic.main.shipment_list_fragment.*
 
 
@@ -170,6 +171,7 @@ class ShipmentListFragment : BaseFragment() {
 
     fun setShipmentList(list: ArrayList<Shipment>?){
         if (list != null && list.isNotEmpty()) {
+            var currentExists = list.filter { it.state == "IN_PROGRESS"}.isNotEmpty()
             shipmentsGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.VISIBLE
             noShipmentGroup.visibility = View.GONE
@@ -181,14 +183,20 @@ class ShipmentListFragment : BaseFragment() {
                     findNavController().navigate(R.id.action_shipmentListFragment_to_shipmentDetailFragment, bundle)
                 }, {
                     setCurrent(it)
-                })
+                }, currentExists)
             val itemDecor = DividerItemDecoration(context, VERTICAL)
             shipmentRecyclerView.addItemDecoration(itemDecor)
             shipmentRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+            var current = list.filter { it.state == "IN_PROGRESS" }
+            if(!current.isNullOrEmpty()){
+                //buttonSelectShipment.isEnabled = false
+            }
         } else {
             noShipmentGroup.visibility = View.VISIBLE
             shipmentsIndicatorsGroup.visibility = View.GONE
             shipmentsGroup.visibility = View.GONE
         }
+
     }
 }
