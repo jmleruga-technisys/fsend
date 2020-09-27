@@ -2,6 +2,7 @@ package com.fif.fpay.android.fsend.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -11,15 +12,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import com.fif.fpay.android.fsend.CustomAlertDialog
 import com.fif.fpay.android.fsend.R
 import com.fif.fpay.android.fsend.data.DirectionResponses
 import com.fif.fpay.android.fsend.data.Shipment
 import com.fif.fpay.android.fsend.viewmodels.ShipmentViewModel
+import com.fif.tech.android.commons.android_connection.utils.converter.Json
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -38,16 +43,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ShipmentDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
@@ -59,7 +54,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
 
     val REQUEST_PHONE_CALL = 1
     lateinit var infoShipment: Shipment
-    
+
     private val viewModel: ShipmentViewModel by navGraphViewModels(R.id.nav_graph_shipment)
 
     companion object {
@@ -82,7 +77,18 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
             onBackPressed()
         }
 
-        infoShipment = Gson().fromJson(arguments?.getString("selected"), Shipment::class.java)
+        requireArguments().get("selected").let {
+            infoShipment =  Gson().fromJson(it.toString(), Shipment::class.java)
+            //Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+        }
+        textDirection?.text = infoShipment.clientInfo.address.fullAddress
+        textAdditionalInfo?.text = infoShipment.clientInfo.address.additionalInfo
+        textUserName?.text = infoShipment.clientInfo.name
+
+        buttonPaymentDetail?.setOnClickListener{
+            findNavController().navigate(R.id.action_shipmentDetailFragment_to_shipmentQrFragment)
+        }
+
 
         myPosition = LatLng(-34.8954889, -58.4001518) //Obtener mi posicion de gps
         mapFragment = childFragmentManager.findFragmentById(R.id.maps_view) as? SupportMapFragment?
@@ -121,7 +127,7 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun startCall(){
-        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + infoShipment!!.clientInfo.phone))
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + infoShipment.clientInfo.phone))
         startActivity(intent)
     }
 
@@ -168,5 +174,4 @@ class ShipmentDetailFragment : BaseFragment(), OnMapReadyCallback {
             return retrofit.create<ApiServices>(ApiServices::class.java)
         }
     }
-
 }

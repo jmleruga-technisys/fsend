@@ -71,10 +71,6 @@ class ShipmentListFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        sentShipments.setOnClickListener {
-            findNavController().navigate(R.id.action_shipmentListFragment_to_shipmentInputCodeFragment)
-        }
-
         viewModel.gotShipments.observe(viewLifecycleOwner, Observer { result ->
             result.getContentIfNotHandled()?.let { shipments ->
                 setShipmentList(shipments)
